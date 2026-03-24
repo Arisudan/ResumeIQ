@@ -1,9 +1,9 @@
 import mammoth from "mammoth";
 import * as pdfjsLib from "pdfjs-dist";
+import pdfWorkerUrl from "pdfjs-dist/build/pdf.worker.min.mjs?url";
 import { Document, Packer, Paragraph, TextRun } from "docx";
 
-pdfjsLib.GlobalWorkerOptions.workerSrc =
-  "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.worker.min.mjs";
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorkerUrl;
 
 const STOPWORDS = new Set([
   "a", "the", "and", "or", "is", "in", "of", "to", "for", "with", "that", "this", "are", "be",
