@@ -11,6 +11,8 @@ import KeywordPanel from "./components/KeywordPanel";
 import OptimizedResume from "./components/OptimizedResume";
 import ScoreCard from "./components/ScoreCard";
 import UploadSection from "./components/UploadSection";
+import logoCore from "./assets/logo.png";
+import logoMain from "./assets/logo-main.png";
 
 function App() {
   const staticOnlyMode = !import.meta.env.VITE_API_BASE_URL;
@@ -174,7 +176,7 @@ function App() {
       <header className="hero-panel">
         <div className="hero-copy">
           <p className="hero-eyebrow">Interactive Resume Intelligence</p>
-          <img className="hero-title-logo" src="/logo-main.png" alt="ResumeIQ AI-Powered Resume Analyzer" />
+          <img className="hero-title-logo" src={logoMain} alt="ResumeIQ AI-Powered Resume Analyzer" />
           <p className="subtitle">A resume lab that explains your score, fixes weak sections, and helps you apply faster.</p>
           <div className="hero-tag-row">
             <span className="hero-tag">ATS-first analysis</span>
@@ -190,7 +192,7 @@ function App() {
             <span className="orbit-chip orbit-chip-right">Smart Rewrite Suggestions</span>
           </div>
           <div className="orb-core">
-            <img className="center-core-logo" src="/logo.png" alt="ResumeIQ logo" />
+            <img className="center-core-logo" src={logoCore} alt="ResumeIQ logo" />
           </div>
         </div>
       </header>
