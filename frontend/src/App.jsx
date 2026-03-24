@@ -176,6 +176,13 @@ function App() {
       <header className="hero-panel">
         <div className="hero-copy">
           <img className="hero-title-logo" src={logoMain} alt="ResumeIQ AI-Powered Resume Analyzer" />
+          <div className="hero-feature-row" aria-label="Product highlights">
+            <span className="hero-feature-item">ATS-first analysis</span>
+            <span className="hero-feature-divider" aria-hidden="true">•</span>
+            <span className="hero-feature-item">Gemini-powered rewrites</span>
+            <span className="hero-feature-divider" aria-hidden="true">•</span>
+            <span className="hero-feature-item">One-click PDF and DOCX report download</span>
+          </div>
         </div>
         <div className="hero-orb" aria-hidden="true">
           <div className="orbit-ring">

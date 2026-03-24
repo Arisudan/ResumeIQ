@@ -110,6 +110,27 @@ body {
   filter: drop-shadow(0 10px 24px rgba(18, 39, 70, 0.16));
 }
 
+.hero-feature-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.hero-feature-item {
+  font-weight: 700;
+  color: #3c4f69;
+}
+
+.hero-feature-divider {
+  color: #a7b6cb;
+  font-weight: 800;
+}
+
 .hero-orb {
   position: relative;
   display: grid;
@@ -1526,10 +1547,25 @@ textarea:focus {
     padding: 24px 14px;
   }
 
+  .hero-copy {
+    display: grid;
+    gap: 0;
+  }
+
   .hero-panel {
     grid-template-columns: 1fr;
     padding: 20px;
     border-radius: 18px;
+  }
+
+  .hero-title-logo {
+    width: min(100%, 520px);
+  }
+
+  .hero-feature-row {
+    gap: 8px;
+    font-size: 0.8rem;
+    margin-top: 10px;
   }
 
   .hero-copy {
