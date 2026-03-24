@@ -157,59 +157,90 @@ body {
   position: relative;
   display: grid;
   place-items: center;
-  min-height: 170px;
+  min-height: 300px;
+  width: min(340px, 100%);
+  justify-self: center;
 }
 
-.hero-floating-cards {
+.solar-orbits {
   position: absolute;
   inset: 0;
   pointer-events: none;
 }
 
-.floating-chip {
+.orbit-track {
   position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 999px;
+  border: 2px dotted rgba(120, 139, 168, 0.55);
+  transform: translate(-50%, -50%);
+  animation: orbitClockwise linear infinite;
+}
+
+.orbit-track.reverse {
+  animation-name: orbitCounterClockwise;
+}
+
+.orbit-one {
+  width: 250px;
+  height: 250px;
+  --orbit-duration: 18s;
+  --orbit-radius: 125px;
+  --planet-angle: 18deg;
+  animation-duration: var(--orbit-duration);
+}
+
+.orbit-two {
+  width: 192px;
+  height: 192px;
+  --orbit-duration: 14s;
+  --orbit-radius: 96px;
+  --planet-angle: 152deg;
+  animation-duration: var(--orbit-duration);
+}
+
+.orbit-three {
+  width: 142px;
+  height: 142px;
+  --orbit-duration: 11s;
+  --orbit-radius: 71px;
+  --planet-angle: 268deg;
+  animation-duration: var(--orbit-duration);
+}
+
+.orbit-planet {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: rotate(var(--planet-angle)) translateY(calc(-1 * var(--orbit-radius)));
+}
+
+.orbit-label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%);
   border: 1px solid #c9d7ee;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.95);
   border-radius: 999px;
   padding: 6px 10px;
   font-size: 0.72rem;
   font-weight: 700;
   color: #395176;
+  white-space: nowrap;
   box-shadow: 0 8px 18px rgba(39, 61, 92, 0.15);
+  animation: orbitCounterClockwise var(--orbit-duration) linear infinite;
 }
 
-.chip-one {
-  top: 12px;
-  left: 12px;
-  animation: floatCard var(--motion-float-duration-1) ease-in-out infinite;
-}
-
-.chip-two {
-  right: 2px;
-  top: 58px;
-  animation: floatCard var(--motion-float-duration-2) ease-in-out infinite;
-  animation-delay: 0.45s;
-}
-
-.chip-three {
-  left: 34px;
-  bottom: 18px;
-  animation: floatCard var(--motion-float-duration-3) ease-in-out infinite;
-  animation-delay: 0.95s;
-}
-
-.orb-ring {
-  width: min(240px, 85%);
-  aspect-ratio: 1;
-  border-radius: 999px;
-  border: 2px dashed rgba(94, 79, 61, 0.3);
-  animation: spinSlow var(--motion-spin-duration) linear infinite;
+.orbit-track.reverse .orbit-label {
+  animation-name: orbitClockwise;
 }
 
 .orb-core {
   position: absolute;
-  width: 112px;
-  height: 112px;
+  width: 126px;
+  height: 126px;
   border-radius: 999px;
   background: linear-gradient(135deg, #2f6fed 0%, #5e96ff 100%);
   box-shadow: 0 12px 28px rgba(47, 111, 237, 0.3);
@@ -225,6 +256,33 @@ body {
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.45);
   animation: ringSheen calc(var(--motion-breathe-duration) * 1.1) ease-in-out infinite;
+}
+
+.center-logo-badge {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  color: #ffffff;
+}
+
+.center-logo-mark {
+  display: block;
+  font-family: "Sora", sans-serif;
+  font-weight: 800;
+  font-size: 1.85rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.center-logo-text {
+  display: block;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  opacity: 0.92;
+  margin-top: 2px;
 }
 
 .main-layout {
@@ -1495,6 +1553,24 @@ textarea:focus {
   }
 }
 
+@keyframes orbitClockwise {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes orbitCounterClockwise {
+  from {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+}
+
 @keyframes ping {
   0% {
     box-shadow: 0 0 0 0 rgba(31, 157, 85, 0.42);
@@ -1526,25 +1602,35 @@ textarea:focus {
   }
 
   .hero-orb {
-    min-height: 130px;
+    min-height: 250px;
+    width: min(320px, 100%);
   }
 
-  .hero-floating-cards {
-    opacity: 0.75;
+  .orbit-one {
+    width: 220px;
+    height: 220px;
+    --orbit-radius: 110px;
   }
 
-  .floating-chip {
-    font-size: 0.68rem;
+  .orbit-two {
+    width: 168px;
+    height: 168px;
+    --orbit-radius: 84px;
+  }
+
+  .orbit-three {
+    width: 124px;
+    height: 124px;
+    --orbit-radius: 62px;
+  }
+
+  .orbit-label {
+    font-size: 0.66rem;
     padding: 5px 8px;
-  }
-
-  .chip-two {
-    right: 8px;
-  }
-
-  .chip-three {
-    left: 10px;
-    bottom: 12px;
+    max-width: 130px;
+    text-align: center;
+    white-space: normal;
+    line-height: 1.2;
   }
 
   .dashboard-shell {
@@ -1630,10 +1716,8 @@ textarea:focus {
 
 @media (prefers-reduced-motion: reduce) {
   .hero-animated-title,
-  .chip-one,
-  .chip-two,
-  .chip-three,
-  .orb-ring,
+  .orbit-track,
+  .orbit-label,
   .orb-core,
   .animated-card,
   .activity-track,

@@ -183,13 +183,29 @@ function App() {
           </div>
         </div>
         <div className="hero-orb" aria-hidden="true">
-          <div className="hero-floating-cards">
-            <div className="floating-chip chip-one">Live ATS Preview</div>
-            <div className="floating-chip chip-two">Keyword Match Graph</div>
-            <div className="floating-chip chip-three">Smart Rewrite Suggestions</div>
+          <div className="solar-orbits">
+            <div className="orbit-track orbit-one">
+              <div className="orbit-planet">
+                <span className="orbit-label">Live ATS Preview</span>
+              </div>
+            </div>
+            <div className="orbit-track orbit-two reverse">
+              <div className="orbit-planet">
+                <span className="orbit-label">Keyword Match Graph</span>
+              </div>
+            </div>
+            <div className="orbit-track orbit-three">
+              <div className="orbit-planet">
+                <span className="orbit-label">Smart Rewrite Suggestions</span>
+              </div>
+            </div>
           </div>
-          <div className="orb-ring" />
-          <div className="orb-core" />
+          <div className="orb-core">
+            <div className="center-logo-badge">
+              <span className="center-logo-mark">RQ</span>
+              <span className="center-logo-text">ResumeIQ</span>
+            </div>
+          </div>
         </div>
       </header>
 
