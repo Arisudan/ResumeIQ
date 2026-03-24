@@ -12,7 +12,7 @@ ResumeIQ is a full-stack web application that analyzes resume relevance against 
 
 - Python 3.11+
 - Node.js 18+
-- OpenAI API key
+- Gemini API key
 
 ## Setup
 
@@ -21,7 +21,7 @@ ResumeIQ is a full-stack web application that analyzes resume relevance against 
    - `cd backend`
    - `pip install -r requirements.txt`
    - Copy `.env.example` to `.env`
-   - Add your OpenAI API key in `.env`
+   - Add your Gemini API key in `.env`
 3. Frontend setup:
    - `cd ../frontend`
    - `npm install`
@@ -51,12 +51,33 @@ npm run dev
 | GET    | `/health`   | Health check endpoint returning app status |
 | POST   | `/analyze`  | Upload resume file + job description, then return ATS score, keyword match, and optimized resume |
 | POST   | `/download` | Convert optimized resume text into DOCX and return as downloadable file |
+| POST   | `/auth/register` | Create account and return bearer token |
+| POST   | `/auth/login` | Login and return bearer token |
+| GET    | `/history` | Get authenticated user analysis history |
+| POST   | `/cover-letter` | Generate optional cover letter |
+
+## GitHub Pages Deployment (Frontend)
+
+GitHub Pages can host the frontend only. Backend must run on a real server (for example Render).
+
+1. Keep backend live on a public URL (example `https://your-backend.onrender.com`).
+2. In your GitHub repo, open Settings -> Secrets and variables -> Actions -> Variables.
+3. Add variable `VITE_API_BASE_URL` with your backend URL.
+4. In repo Settings -> Pages, set Source to `GitHub Actions`.
+5. Push to `main`. Workflow `.github/workflows/deploy-pages.yml` will auto-deploy frontend.
+6. Frontend will be served at `https://<github-username>.github.io/ResumeIQ/`.
+
+### Important Backend Env for Pages CORS
+
+Set this on backend host:
+
+- `ALLOWED_ORIGINS=https://<github-username>.github.io`
 
 ## Tech Stack
 
 - Backend: FastAPI, Uvicorn
 - Frontend: React 18, Vite, plain CSS
-- AI: OpenAI GPT-4o via openai Python SDK
+- AI: Gemini via google-generativeai SDK
 - Parsing: pdfplumber (PDF), python-docx (DOCX)
 - Document Export: python-docx
 - Environment Management: python-dotenv

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./App.css";
+import { apiUrl, authHeaders } from "./api";
 import AnalysisReport from "./components/AnalysisReport";
 import AuthPanel from "./components/AuthPanel";
 import CoverLetterPanel from "./components/CoverLetterPanel";
@@ -39,9 +40,9 @@ function App() {
     setError("");
 
     try {
-      const response = await fetch("/api/analyze", {
+      const response = await fetch(apiUrl("/analyze"), {
         method: "POST",
-        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+        headers: authHeaders(token),
         body: formData,
       });
 

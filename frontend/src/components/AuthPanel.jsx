@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { apiUrl } from "../api";
 
 function AuthPanel({ token, user, onAuth, onLogout }) {
   const [mode, setMode] = useState("login");
@@ -13,7 +14,7 @@ function AuthPanel({ token, user, onAuth, onLogout }) {
     setLoading(true);
 
     try {
-      const response = await fetch(`/api/auth/${mode}`, {
+      const response = await fetch(apiUrl(`/auth/${mode}`), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

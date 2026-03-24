@@ -1,5 +1,6 @@
 from io import BytesIO
 import logging
+import os
 import time
 from typing import Annotated
 
@@ -30,9 +31,12 @@ ALLOWED_CONTENT_TYPES = {
     "application/octet-stream",
 }
 
+allowed_origins_raw = os.getenv("ALLOWED_ORIGINS", "*")
+allowed_origins = [origin.strip() for origin in allowed_origins_raw.split(",") if origin.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=allowed_origins if allowed_origins else ["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

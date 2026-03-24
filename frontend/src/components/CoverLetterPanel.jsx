@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { apiUrl } from "../api";
 
 function CoverLetterPanel({ resumeText, jobDescription, controls }) {
   const [loading, setLoading] = useState(false);
@@ -11,7 +12,7 @@ function CoverLetterPanel({ resumeText, jobDescription, controls }) {
     setError("");
 
     try {
-      const response = await fetch("/api/cover-letter", {
+      const response = await fetch(apiUrl("/cover-letter"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

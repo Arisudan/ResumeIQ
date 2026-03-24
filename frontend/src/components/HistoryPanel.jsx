@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { apiUrl, authHeaders } from "../api";
 
 function HistoryPanel({ token }) {
   const [items, setItems] = useState([]);
@@ -14,8 +15,8 @@ function HistoryPanel({ token }) {
     setLoading(true);
     setError("");
     try {
-      const response = await fetch("/api/history?limit=20", {
-        headers: { Authorization: `Bearer ${token}` },
+      const response = await fetch(apiUrl("/history?limit=20"), {
+        headers: authHeaders(token),
       });
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));

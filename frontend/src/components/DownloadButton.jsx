@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { apiUrl } from "../api";
 
 function DownloadButton({ optimizedResume }) {
   const [loading, setLoading] = useState(false);
@@ -10,7 +11,7 @@ function DownloadButton({ optimizedResume }) {
 
     setLoading(true);
     try {
-      const response = await fetch("/api/download", {
+      const response = await fetch(apiUrl("/download"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
