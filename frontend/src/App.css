@@ -122,13 +122,23 @@ body {
 }
 
 .hero-feature-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(194, 212, 236, 0.95);
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 8px 18px rgba(39, 61, 92, 0.1);
   font-weight: 700;
   color: #3c4f69;
+  white-space: nowrap;
 }
 
-.hero-feature-divider {
-  color: #a7b6cb;
-  font-weight: 800;
+.hero-feature-item:hover {
+  border-color: rgba(47, 111, 237, 0.35);
+  box-shadow: 0 10px 22px rgba(47, 111, 237, 0.12);
 }
 
 .hero-orb {
@@ -1566,6 +1576,13 @@ textarea:focus {
     gap: 8px;
     font-size: 0.8rem;
     margin-top: 10px;
+  }
+
+  .hero-feature-item {
+    min-height: 34px;
+    padding: 6px 10px;
+    white-space: normal;
+    line-height: 1.2;
   }
 
   .hero-copy {
