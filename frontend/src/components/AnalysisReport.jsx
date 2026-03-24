@@ -1,152 +1,190 @@
+import { useMemo, useState } from "react";
+
+function statusLabel(score) {
+  if (score >= 80) return "Excellent";
+  if (score >= 60) return "Good Start";
+  return "Needs Work";
+}
+
+function statusClass(score) {
+  if (score >= 80) return "excellent";
+  if (score >= 60) return "good";
+  return "warning";
+}
+
 function AnalysisReport({ result }) {
+  const [showExplanation, setShowExplanation] = useState(true);
+
   const improvement = result.score_improvement_estimate || {
     before: result.score,
     after: result.score,
     delta: 0,
   };
 
+  const topFactors = useMemo(() => {
+    const factors = result.ats_factor_breakdown || [];
+    return factors.slice(0, 4);
+  }, [result.ats_factor_breakdown]);
+
+  const priorityFixes = useMemo(() => {
+    const fixes = [];
+    if ((result.missing_required_keywords || []).length) {
+      fixes.push("Add missing required skills in Experience + Skills first.");
+    }
+    if ((result.bullet_quality?.quantified_bullets || 0) < Math.max(1, Math.floor((result.bullet_quality?.total_bullets || 1) / 2))) {
+      fixes.push("Add numbers or percentages in more bullets to prove impact.");
+    }
+    if ((result.readability?.readability_score || 0) < 70) {
+      fixes.push("Shorten long lines for recruiter-friendly readability.");
+    }
+    if ((result.experience_gap?.status || "") === "gap_detected") {
+      fixes.push("Address experience gap by emphasizing relevant project outcomes.");
+    }
+    fixes.push(...(result.recommendations || []).slice(0, 2));
+    return fixes.slice(0, 5);
+  }, [result]);
+
+  const railPosition = Math.max(2, Math.min(98, result.score || 0));
+
+  const insightRows = [
+    {
+      label: "Impact",
+      score: result.bullet_quality?.overall_strength || 0,
+      note: `${result.bullet_quality?.achievement_bullets || 0} outcome bullets`,
+    },
+    {
+      label: "Brevity",
+      score: result.readability?.readability_score || 0,
+      note: `${result.readability?.avg_words_per_sentence || 0} avg words/sentence`,
+    },
+    {
+      label: "Style",
+      score: result.readability?.grammar_score || 0,
+      note: result.contact_checks?.format_status || "review",
+    },
+    {
+      label: "Skills",
+      score: result.template_alignment?.score || 0,
+      note: `${(result.matched_keywords || []).length}/${result.total_job_keywords || 0} matched`,
+    },
+  ];
+
   return (
-    <section className="card">
-      <h2 className="panel-title">Phase 1 Analysis Report</h2>
-
-      <div className="insight-grid">
-        <div className="insight-box">
-          <strong>{result.analysis_version || "phase1"}</strong>
-          <span>Analysis Version</span>
-        </div>
-        <div className="insight-box">
-          <strong>{improvement.before} → {improvement.after}</strong>
-          <span>Estimated Score Shift</span>
-        </div>
-        <div className="insight-box">
-          <strong>{improvement.delta >= 0 ? `+${improvement.delta}` : improvement.delta}</strong>
-          <span>Delta</span>
-        </div>
+    <section className="card report-card">
+      <div className="report-head">
+        <h2 className="panel-title" style={{ marginBottom: 0 }}>Resume Performance Report</h2>
+        <button
+          type="button"
+          className="btn-secondary"
+          onClick={() => setShowExplanation((prev) => !prev)}
+        >
+          {showExplanation ? "Hide Explanation" : "Explain My Score"}
+        </button>
       </div>
 
-      <h3>Section Match Strength</h3>
-      <div className="section-score-list">
-        {(result.section_scores || []).slice(0, 6).map((item) => (
-          <div key={item.section} className="section-score-item">
-            <div className="section-score-head">
-              <span>{item.section}</span>
-              <span>{item.score}%</span>
-            </div>
-            <div className="mini-bar-track">
-              <div className="mini-bar-fill" style={{ width: `${item.score}%` }} />
-            </div>
+      <div className="insight-quad">
+        {insightRows.map((item) => (
+          <div key={item.label} className="insight-tile">
+            <span className="insight-kicker">{item.label}</span>
+            <strong>{item.score}/100</strong>
+            <span className={`mini-status ${statusClass(item.score)}`}>{statusLabel(item.score)}</span>
+            <small>{item.note}</small>
           </div>
         ))}
       </div>
 
-      <h3>ATS Factor Breakdown</h3>
-      <div className="section-score-list">
-        {(result.ats_factor_breakdown || []).map((item) => (
-          <div key={item.factor} className="section-score-item">
-            <div className="section-score-head">
-              <span>{item.factor}</span>
-              <span>{item.score}% ({item.weight}%)</span>
-            </div>
-            <div className="mini-bar-track">
-              <div className="mini-bar-fill" style={{ width: `${item.score}%` }} />
+      <div className="score-explainer">
+        <div className="score-explainer-top">
+          <div>
+            <strong>Your resume scored {result.score} / 100</strong>
+            <div className="helper-text" style={{ marginTop: 4 }}>
+              Estimated improvement: {improvement.before} to {improvement.after} ({improvement.delta >= 0 ? `+${improvement.delta}` : improvement.delta})
             </div>
           </div>
-        ))}
+          <div className={`mini-status ${statusClass(result.score || 0)}`}>{statusLabel(result.score || 0)}</div>
+        </div>
+
+        <div className="score-rail-wrap">
+          <div className="score-rail" />
+          <div className="score-pin" style={{ left: `${railPosition}%` }}>
+            <span>YOUR RESUME</span>
+          </div>
+          <div className="score-rail-scale">
+            <span>0</span>
+            <span>100</span>
+          </div>
+        </div>
       </div>
 
-      <h3>Experience Gap Check</h3>
+      {showExplanation && (
+        <>
+          <h3>Factor Breakdown</h3>
+          <div className="section-score-list">
+            {topFactors.map((item) => (
+              <div key={item.factor} className="section-score-item">
+                <div className="section-score-head">
+                  <span>{item.factor}</span>
+                  <span>{item.score}%</span>
+                </div>
+                <div className="mini-bar-track">
+                  <div className="mini-bar-fill" style={{ width: `${item.score}%` }} />
+                </div>
+                <small className="helper-text" style={{ marginTop: 8, display: "block" }}>
+                  Weight {item.weight}% and contribution {item.contribution}
+                </small>
+              </div>
+            ))}
+          </div>
+
+          <h3>Top Priority Fixes</h3>
+          <div className="priority-fixes">
+            {priorityFixes.map((fix, index) => (
+              <div key={`${fix}-${index}`} className="fix-item">
+                <span className="fix-index">{index + 1}</span>
+                <span>{fix}</span>
+              </div>
+            ))}
+          </div>
+
+          <h3>Section Match Strength</h3>
+          <div className="section-score-list">
+            {(result.section_scores || []).slice(0, 6).map((item) => (
+              <div key={item.section} className="section-score-item">
+                <div className="section-score-head">
+                  <span>{item.section}</span>
+                  <span>{item.score}%</span>
+                </div>
+                <div className="mini-bar-track">
+                  <div className="mini-bar-fill" style={{ width: `${item.score}%` }} />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <h3>Line-Level Guidance</h3>
+          <ul className="changes-list" style={{ marginBottom: "16px" }}>
+            {(result.keyword_placement || []).slice(0, 5).map((item, index) => (
+              <li key={`${item.keyword}-${index}`}>
+                <strong>{item.keyword}</strong> in <strong>{item.section}</strong>: {item.reason}
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+
+      <h3>Risk and Validation Signals</h3>
       <div className="insight-grid">
-        <div className="insight-box">
-          <strong>{result.experience_gap?.required_years ?? "N/A"}</strong>
-          <span>Required Years</span>
-        </div>
-        <div className="insight-box">
-          <strong>{result.experience_gap?.resume_years_hint ?? "N/A"}</strong>
-          <span>Resume Years Hint</span>
-        </div>
         <div className="insight-box">
           <strong>{result.experience_gap?.status ?? "unknown"}</strong>
-          <span>Status</span>
-        </div>
-      </div>
-
-      <h3>Required Keyword Risk</h3>
-      <div className="chips-wrap" style={{ marginBottom: "10px" }}>
-        {(result.missing_required_keywords || []).length ? (
-          result.missing_required_keywords.map((keyword) => (
-            <span key={`required-missing-${keyword}`} className="keyword-chip missing">
-              {keyword}
-            </span>
-          ))
-        ) : (
-          <span className="helper-text">No missing required keywords detected.</span>
-        )}
-      </div>
-
-      <h3>Bullet Quality</h3>
-      <div className="insight-grid">
-        <div className="insight-box">
-          <strong>{result.bullet_quality?.total_bullets ?? 0}</strong>
-          <span>Total Bullets</span>
-        </div>
-        <div className="insight-box">
-          <strong>{result.bullet_quality?.quantified_bullets ?? 0}</strong>
-          <span>Quantified Bullets</span>
-        </div>
-        <div className="insight-box">
-          <strong>{result.bullet_quality?.overall_strength ?? 0}%</strong>
-          <span>Bullet Strength</span>
-        </div>
-        <div className="insight-box">
-          <strong>{result.bullet_quality?.achievement_bullets ?? 0}</strong>
-          <span>Achievement Bullets</span>
-        </div>
-      </div>
-
-      <h3>Readability & Contact Quality</h3>
-      <div className="insight-grid">
-        <div className="insight-box">
-          <strong>{result.readability?.readability_score ?? 0}%</strong>
-          <span>Readability</span>
-        </div>
-        <div className="insight-box">
-          <strong>{result.readability?.grammar_score ?? 0}%</strong>
-          <span>Grammar Signal</span>
+          <span>Experience Gap</span>
         </div>
         <div className="insight-box">
           <strong>{result.contact_checks?.email_present ? "Yes" : "No"}</strong>
           <span>Email Present</span>
         </div>
-      </div>
-
-      <div className="insight-grid">
         <div className="insight-box">
           <strong>{result.contact_checks?.linkedin_present ? "Yes" : "No"}</strong>
           <span>LinkedIn Present</span>
-        </div>
-        <div className="insight-box">
-          <strong>{result.contact_checks?.phone_present ? "Yes" : "No"}</strong>
-          <span>Phone Present</span>
-        </div>
-        <div className="insight-box">
-          <strong>{result.language || "English"}</strong>
-          <span>Detected Language</span>
-        </div>
-      </div>
-
-      <h3>LinkedIn Alignment</h3>
-      <div className="insight-grid">
-        <div className="insight-box">
-          <strong>{result.linkedin_alignment?.status ?? "not_provided"}</strong>
-          <span>Status</span>
-        </div>
-        <div className="insight-box">
-          <strong>{result.linkedin_alignment?.overlap_score ?? 0}%</strong>
-          <span>Overlap Score</span>
-        </div>
-        <div className="insight-box">
-          <strong>{result.template_alignment?.score ?? 0}%</strong>
-          <span>Template Alignment</span>
         </div>
       </div>
 
@@ -171,42 +209,6 @@ function AnalysisReport({ result }) {
           </ul>
         </>
       )}
-
-      {result.multi_job_preview && (
-        <>
-          <h3>Multi-Job Targeting Preview</h3>
-          <div className="insight-grid">
-            <div className="insight-box">
-              <strong>{result.multi_job_preview.jobs_analyzed}</strong>
-              <span>Jobs Compared</span>
-            </div>
-            <div className="insight-box">
-              <strong>{result.multi_job_preview.best_fit_job_index + 1}</strong>
-              <span>Best Fit Job #</span>
-            </div>
-            <div className="insight-box">
-              <strong>{result.multi_job_preview.average_score}</strong>
-              <span>Average Score</span>
-            </div>
-          </div>
-        </>
-      )}
-
-      <h3>Placement Suggestions</h3>
-      <ul className="changes-list" style={{ marginBottom: "16px" }}>
-        {(result.keyword_placement || []).slice(0, 5).map((item, index) => (
-          <li key={`${item.keyword}-${index}`}>
-            <strong>{item.keyword}</strong> in <strong>{item.section}</strong>: {item.reason}
-          </li>
-        ))}
-      </ul>
-
-      <h3>Top Recommendations</h3>
-      <ul className="changes-list">
-        {(result.recommendations || []).map((tip, index) => (
-          <li key={`${tip}-${index}`}>{tip}</li>
-        ))}
-      </ul>
     </section>
   );
 }
