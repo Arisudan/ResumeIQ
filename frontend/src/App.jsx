@@ -175,14 +175,7 @@ function App() {
     <div className="app app-shell">
       <header className="hero-panel">
         <div className="hero-copy">
-          <p className="hero-eyebrow">Interactive Resume Intelligence</p>
           <img className="hero-title-logo" src={logoMain} alt="ResumeIQ AI-Powered Resume Analyzer" />
-          <p className="subtitle">A resume lab that explains your score, fixes weak sections, and helps you apply faster.</p>
-          <div className="hero-tag-row">
-            <span className="hero-tag">ATS-first analysis</span>
-            <span className="hero-tag">Gemini-powered rewrites</span>
-            <span className="hero-tag">One-click DOCX export</span>
-          </div>
         </div>
         <div className="hero-orb" aria-hidden="true">
           <div className="orbit-ring">
