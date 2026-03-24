@@ -102,22 +102,12 @@ body {
   animation: revealUp var(--motion-reveal-duration) ease both;
 }
 
-.hero-copy h1 {
-  margin: 0;
-  font-family: "Sora", sans-serif;
-  font-size: clamp(2.2rem, 5vw, 4rem);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: #201b14;
-}
-
-.hero-animated-title {
-  background: linear-gradient(120deg, #1f2a37 0%, #2f6fed 40%, #1f9d55 75%, #1f2a37 100%);
-  background-size: 200% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: titleFlow var(--motion-title-duration) linear infinite;
+.hero-title-logo {
+  display: block;
+  width: min(560px, 100%);
+  height: auto;
+  margin: 4px 0 0;
+  filter: drop-shadow(0 8px 20px rgba(18, 39, 70, 0.22));
 }
 
 .hero-eyebrow {
@@ -213,7 +203,9 @@ body {
   position: absolute;
   left: 50%;
   top: 50%;
-  transform: rotate(var(--planet-angle)) translateY(calc(-1 * var(--orbit-radius)));
+  width: 0;
+  height: 0;
+  transform: rotate(var(--planet-angle)) translateX(var(--orbit-radius)) rotate(calc(-1 * var(--planet-angle)));
 }
 
 .orbit-label {
@@ -230,7 +222,10 @@ body {
   color: #395176;
   white-space: nowrap;
   box-shadow: 0 8px 18px rgba(39, 61, 92, 0.15);
-  animation: orbitCounterClockwise var(--orbit-duration) linear infinite;
+  animation-name: orbitCounterClockwise;
+  animation-duration: inherit;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
 }
 
 .orbit-track.reverse .orbit-label {
@@ -242,11 +237,14 @@ body {
   width: 126px;
   height: 126px;
   border-radius: 999px;
-  background: linear-gradient(135deg, #2f6fed 0%, #5e96ff 100%);
-  box-shadow: 0 12px 28px rgba(47, 111, 237, 0.3);
+  background: radial-gradient(circle at 50% 45%, #ffffff 0%, #eef5ff 70%, #dbe8fb 100%);
+  border: 1px solid rgba(109, 143, 196, 0.45);
+  box-shadow: 0 12px 28px rgba(33, 60, 103, 0.28);
   transform-origin: center;
   will-change: transform, box-shadow;
   animation: orbGlide var(--motion-breathe-duration) cubic-bezier(0.4, 0.05, 0.2, 1) infinite;
+  display: grid;
+  place-items: center;
 }
 
 .orb-core::after {
@@ -254,35 +252,16 @@ body {
   position: absolute;
   inset: 12px;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(70, 116, 182, 0.24);
   animation: ringSheen calc(var(--motion-breathe-duration) * 1.1) ease-in-out infinite;
 }
 
-.center-logo-badge {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  text-align: center;
-  color: #ffffff;
-}
-
-.center-logo-mark {
-  display: block;
-  font-family: "Sora", sans-serif;
-  font-weight: 800;
-  font-size: 1.85rem;
-  line-height: 1;
-  letter-spacing: -0.02em;
-}
-
-.center-logo-text {
-  display: block;
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  opacity: 0.92;
-  margin-top: 2px;
+.center-core-logo {
+  width: 76px;
+  height: 76px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 10px rgba(20, 47, 92, 0.22));
+  z-index: 2;
 }
 
 .main-layout {

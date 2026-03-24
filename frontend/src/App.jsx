@@ -174,7 +174,7 @@ function App() {
       <header className="hero-panel">
         <div className="hero-copy">
           <p className="hero-eyebrow">Interactive Resume Intelligence</p>
-          <h1 className="hero-animated-title">ResumeIQ</h1>
+          <img className="hero-title-logo" src="/logo-main.png" alt="ResumeIQ AI-Powered Resume Analyzer" />
           <p className="subtitle">A resume lab that explains your score, fixes weak sections, and helps you apply faster.</p>
           <div className="hero-tag-row">
             <span className="hero-tag">ATS-first analysis</span>
@@ -201,10 +201,7 @@ function App() {
             </div>
           </div>
           <div className="orb-core">
-            <div className="center-logo-badge">
-              <span className="center-logo-mark">RQ</span>
-              <span className="center-logo-text">ResumeIQ</span>
-            </div>
+            <img className="center-core-logo" src="/logo.png" alt="ResumeIQ logo" />
           </div>
         </div>
       </header>
