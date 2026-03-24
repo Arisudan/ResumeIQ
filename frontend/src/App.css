@@ -546,10 +546,11 @@ textarea:focus {
   margin-top: 14px;
   border-top: 1px solid var(--border);
   padding-top: 12px;
-  position: sticky;
-  bottom: 0;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), var(--surface));
-  z-index: 4;
+  position: static;
+  background: var(--surface);
+  z-index: auto;
+  display: grid;
+  gap: 8px;
 }
 
 .upload-submit-hint {
@@ -562,6 +563,15 @@ textarea:focus {
 .upload-submit-btn {
   position: relative;
   overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 46px;
+  border: 1px solid rgba(21, 62, 149, 0.18);
+  box-shadow: 0 8px 18px rgba(47, 111, 237, 0.24);
+  visibility: visible;
+  opacity: 1;
 }
 
 .upload-submit-btn:not(:disabled)::after {
@@ -580,6 +590,8 @@ textarea:focus {
   opacity: 1;
   background: #8eaeea;
   color: #ffffff;
+  border-color: #7a9cdd;
+  box-shadow: none;
 }
 
 .inline-error {
@@ -1264,6 +1276,10 @@ textarea:focus {
   .upload-submit-bar {
     position: static;
     background: transparent;
+  }
+
+  .upload-submit-btn {
+    min-height: 44px;
   }
 
   .dashboard-nav-btn {
