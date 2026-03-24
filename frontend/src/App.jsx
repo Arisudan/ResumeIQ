@@ -139,59 +139,60 @@ function App() {
 
       {error && <div className="global-error">{error}</div>}
 
-      <section className="dashboard-nav-bar" aria-label="Dashboard navigation">
-        <div className="dashboard-nav-items">
-          <button type="button" className="dashboard-nav-btn" onClick={() => jumpTo("setup-section")}>Setup</button>
-          <button type="button" className="dashboard-nav-btn" onClick={() => jumpTo("workspace-section")}>Analysis</button>
-          <button
-            type="button"
-            className="dashboard-nav-btn"
-            onClick={() => {
-              jumpTo("workspace-section");
-              setActiveResultTab("resume");
-            }}
-            disabled={!result}
-          >
-            Optimized Resume
-          </button>
-          {!staticOnlyMode && (
+      <main className="dashboard-shell">
+        <aside className="dashboard-nav-bar" aria-label="Dashboard navigation">
+          <div className="dashboard-nav-items">
+            <button type="button" className="dashboard-nav-btn" onClick={() => jumpTo("setup-section")}>Setup</button>
+            <button type="button" className="dashboard-nav-btn" onClick={() => jumpTo("workspace-section")}>Analysis</button>
             <button
               type="button"
               className="dashboard-nav-btn"
               onClick={() => {
                 jumpTo("workspace-section");
-                setActiveResultTab("cover");
+                setActiveResultTab("resume");
               }}
               disabled={!result}
             >
-              Cover Letter
+              Optimized Resume
             </button>
-          )}
-        </div>
-
-        {result && (
-          <div className="dashboard-kpis">
-            <div className="kpi-card">
-              <strong>{result.score}</strong>
-              <span>ATS Score</span>
-            </div>
-            <div className="kpi-card">
-              <strong>{matchedCount}</strong>
-              <span>Matched</span>
-            </div>
-            <div className="kpi-card">
-              <strong>{missingCount}</strong>
-              <span>Missing</span>
-            </div>
-            <div className="kpi-card">
-              <strong>{deltaScore >= 0 ? `+${deltaScore}` : deltaScore}</strong>
-              <span>Projected Gain</span>
-            </div>
+            {!staticOnlyMode && (
+              <button
+                type="button"
+                className="dashboard-nav-btn"
+                onClick={() => {
+                  jumpTo("workspace-section");
+                  setActiveResultTab("cover");
+                }}
+                disabled={!result}
+              >
+                Cover Letter
+              </button>
+            )}
           </div>
-        )}
-      </section>
 
-      <main className="main-layout">
+          {result && (
+            <div className="dashboard-kpis">
+              <div className="kpi-card">
+                <strong>{result.score}</strong>
+                <span>ATS Score</span>
+              </div>
+              <div className="kpi-card">
+                <strong>{matchedCount}</strong>
+                <span>Matched</span>
+              </div>
+              <div className="kpi-card">
+                <strong>{missingCount}</strong>
+                <span>Missing</span>
+              </div>
+              <div className="kpi-card">
+                <strong>{deltaScore >= 0 ? `+${deltaScore}` : deltaScore}</strong>
+                <span>Projected Gain</span>
+              </div>
+            </div>
+          )}
+        </aside>
+
+        <section className="main-layout">
         <section id="setup-section" className="setup-grid">
           <div className="setup-main">
             <UploadSection onSubmit={handleAnalyze} loading={loading} />
@@ -285,6 +286,7 @@ function App() {
             </div>
           </section>
         )}
+        </section>
       </main>
     </div>
   );
