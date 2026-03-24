@@ -4,6 +4,7 @@
   --surface2: #f7f9fd;
   --border: #d8e1ec;
   --accent: #2f6fed;
+  --accent-strong: #1f5ad6;
   --accent2: #1f9d55;
   --warning: #b97100;
   --danger: #c13838;
@@ -543,6 +544,7 @@ textarea:focus {
 
 .btn-primary {
   width: 100%;
+  background-color: var(--accent);
   background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%);
   color: #ffffff;
   border: none;
