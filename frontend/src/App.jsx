@@ -107,6 +107,17 @@ function App() {
     ...(!staticOnlyMode ? [{ key: "cover", label: "Cover Letter" }] : []),
   ];
 
+  const jumpTo = (sectionId) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
+  const matchedCount = (result?.matched_keywords || []).length;
+  const missingCount = (result?.missing_keywords || []).length;
+  const deltaScore = result?.score_improvement_estimate?.delta ?? 0;
+
   return (
     <div className="app app-shell">
       <header className="hero-panel">
@@ -128,117 +139,152 @@ function App() {
 
       {error && <div className="global-error">{error}</div>}
 
-      <main className="main-grid">
-        <div className="stack">
-          {!staticOnlyMode && <AuthPanel token={token} user={user} onAuth={handleAuth} onLogout={handleLogout} />}
-          <UploadSection onSubmit={handleAnalyze} loading={loading} />
-          {!staticOnlyMode && <HistoryPanel token={token} />}
+      <section className="dashboard-nav-bar" aria-label="Dashboard navigation">
+        <div className="dashboard-nav-items">
+          <button type="button" className="dashboard-nav-btn" onClick={() => jumpTo("setup-section")}>Setup</button>
+          <button type="button" className="dashboard-nav-btn" onClick={() => jumpTo("workspace-section")}>Analysis</button>
+          <button
+            type="button"
+            className="dashboard-nav-btn"
+            onClick={() => {
+              jumpTo("workspace-section");
+              setActiveResultTab("resume");
+            }}
+            disabled={!result}
+          >
+            Optimized Resume
+          </button>
+          {!staticOnlyMode && (
+            <button
+              type="button"
+              className="dashboard-nav-btn"
+              onClick={() => {
+                jumpTo("workspace-section");
+                setActiveResultTab("cover");
+              }}
+              disabled={!result}
+            >
+              Cover Letter
+            </button>
+          )}
         </div>
 
-        <div className="stack">
-          {result && (
-            <div className="result-grid">
-              <div className="result-col">
-                <ScoreCard
-                  score={result.score}
-                  matched={result.matched_keywords}
-                  missing={result.missing_keywords}
-                  total={result.total_job_keywords}
-                />
+        {result && (
+          <div className="dashboard-kpis">
+            <div className="kpi-card">
+              <strong>{result.score}</strong>
+              <span>ATS Score</span>
+            </div>
+            <div className="kpi-card">
+              <strong>{matchedCount}</strong>
+              <span>Matched</span>
+            </div>
+            <div className="kpi-card">
+              <strong>{missingCount}</strong>
+              <span>Missing</span>
+            </div>
+            <div className="kpi-card">
+              <strong>{deltaScore >= 0 ? `+${deltaScore}` : deltaScore}</strong>
+              <span>Projected Gain</span>
+            </div>
+          </div>
+        )}
+      </section>
 
-                <section className="card result-workspace">
-                  <div className="result-topline">
-                    <div>
-                      <p className="coach-kicker">Analysis Workspace</p>
-                      <h2 className="panel-title">Your resume scored {result.score} out of 100</h2>
-                    </div>
-                    <div className="result-top-actions">
-                      <span className="result-pill">
-                        {(result.missing_keywords || []).length} missing keywords
-                      </span>
-                      <DownloadButton optimizedResume={result.optimized_resume} />
-                    </div>
-                  </div>
-
-                  <div className="workspace-shell">
-                    <aside className="result-rail" role="tablist" aria-label="Analysis sections">
-                      {resultTabs.map((tab) => (
-                        <button
-                          key={tab.key}
-                          type="button"
-                          className={`result-rail-item ${activeResultTab === tab.key ? "active" : ""}`}
-                          onClick={() => setActiveResultTab(tab.key)}
-                          aria-current={activeResultTab === tab.key ? "true" : undefined}
-                        >
-                          {tab.label}
-                        </button>
-                      ))}
-                    </aside>
-
-                    <div className="result-pane">
-                      <div className="result-tabs" role="tablist" aria-label="Result sections">
-                        {resultTabs.map((tab) => (
-                          <button
-                            key={`mobile-${tab.key}`}
-                            type="button"
-                            className={`result-tab ${activeResultTab === tab.key ? "active" : ""}`}
-                            onClick={() => setActiveResultTab(tab.key)}
-                          >
-                            {tab.label}
-                          </button>
-                        ))}
-                      </div>
-
-                      {activeResultTab === "breakdown" && <AnalysisReport result={result} />}
-                      {activeResultTab === "keywords" && (
-                        <KeywordPanel
-                          matched={result.matched_keywords}
-                          missing={result.missing_keywords}
-                        />
-                      )}
-                      {activeResultTab === "resume" && (
-                        <OptimizedResume
-                          text={result.optimized_resume}
-                          changes={result.changes_summary}
-                          changeReasons={result.change_reasons}
-                          truthfulnessNotes={result.truthfulness_notes}
-                        />
-                      )}
-                      {!staticOnlyMode && activeResultTab === "cover" && (
-                        <CoverLetterPanel
-                          resumeText={result.optimized_resume}
-                          jobDescription={result.job_description_used || ""}
-                          controls={result.rewrite_controls}
-                        />
-                      )}
-                    </div>
-                  </div>
-                </section>
-              </div>
+      <main className="main-layout">
+        <section id="setup-section" className="setup-grid">
+          <div className="setup-main">
+            <UploadSection onSubmit={handleAnalyze} loading={loading} />
+          </div>
+          {!staticOnlyMode && (
+            <div className="setup-side">
+              <AuthPanel token={token} user={user} onAuth={handleAuth} onLogout={handleLogout} />
+              <HistoryPanel token={token} />
             </div>
           )}
+        </section>
 
-          {!result && !loading && (
-            <section className="card empty-state">
-              <p className="coach-kicker">Quick Start</p>
-              <h2 className="panel-title">Drop resume, paste JD, run analysis</h2>
-              <div className="empty-grid">
-                <div className="empty-item">
-                  <strong>1. Upload</strong>
-                  <span>Add PDF, DOCX, or TXT resume.</span>
+        {result && (
+          <section id="workspace-section" className="card result-workspace result-workspace-full">
+            <div className="result-summary-grid">
+              <ScoreCard
+                score={result.score}
+                matched={result.matched_keywords}
+                missing={result.missing_keywords}
+                total={result.total_job_keywords}
+              />
+              <div className="result-topline">
+                <div>
+                  <p className="coach-kicker">Analysis Workspace</p>
+                  <h2 className="panel-title">Your resume scored {result.score} out of 100</h2>
                 </div>
-                <div className="empty-item">
-                  <strong>2. Analyze</strong>
-                  <span>Get ATS score, keyword gaps, and risk signals.</span>
-                </div>
-                <div className="empty-item">
-                  <strong>3. Optimize</strong>
-                  <span>Apply suggestions and export optimized DOCX.</span>
+                <div className="result-top-actions">
+                  <span className="result-pill">
+                    {(result.missing_keywords || []).length} missing keywords
+                  </span>
+                  <DownloadButton optimizedResume={result.optimized_resume} />
                 </div>
               </div>
-            </section>
-          )}
-        </div>
+            </div>
+
+            <div className="result-tabs" role="tablist" aria-label="Result sections">
+              {resultTabs.map((tab) => (
+                <button
+                  key={tab.key}
+                  type="button"
+                  className={`result-tab ${activeResultTab === tab.key ? "active" : ""}`}
+                  onClick={() => setActiveResultTab(tab.key)}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            {activeResultTab === "breakdown" && <AnalysisReport result={result} />}
+            {activeResultTab === "keywords" && (
+              <KeywordPanel
+                matched={result.matched_keywords}
+                missing={result.missing_keywords}
+              />
+            )}
+            {activeResultTab === "resume" && (
+              <OptimizedResume
+                text={result.optimized_resume}
+                changes={result.changes_summary}
+                changeReasons={result.change_reasons}
+                truthfulnessNotes={result.truthfulness_notes}
+              />
+            )}
+            {!staticOnlyMode && activeResultTab === "cover" && (
+              <CoverLetterPanel
+                resumeText={result.optimized_resume}
+                jobDescription={result.job_description_used || ""}
+                controls={result.rewrite_controls}
+              />
+            )}
+          </section>
+        )}
+
+        {!result && !loading && (
+          <section className="card empty-state">
+            <p className="coach-kicker">Quick Start</p>
+            <h2 className="panel-title">Drop resume, paste JD, run analysis</h2>
+            <div className="empty-grid">
+              <div className="empty-item">
+                <strong>1. Upload</strong>
+                <span>Add PDF, DOCX, or TXT resume.</span>
+              </div>
+              <div className="empty-item">
+                <strong>2. Analyze</strong>
+                <span>Get ATS score, keyword gaps, and risk signals.</span>
+              </div>
+              <div className="empty-item">
+                <strong>3. Optimize</strong>
+                <span>Apply suggestions and export optimized DOCX or PDF.</span>
+              </div>
+            </div>
+          </section>
+        )}
       </main>
     </div>
   );
