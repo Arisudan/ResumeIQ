@@ -144,6 +144,23 @@ body {
   gap: 14px;
 }
 
+.page-enter {
+  animation: pageFadeIn 0.45s ease;
+}
+
+.page-switch-btn {
+  margin-top: 10px;
+  width: 100%;
+  border-color: #b7c9e8;
+  background: #f0f6ff;
+  color: #2b4a7f;
+}
+
+.page-switch-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
 .dashboard-shell {
   display: grid;
   grid-template-columns: 260px minmax(0, 1fr);
@@ -1217,6 +1234,17 @@ textarea:focus {
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
