@@ -12,6 +12,10 @@ function statusClass(score) {
   return "warning";
 }
 
+function clampScore(value) {
+  return Math.max(0, Math.min(100, Math.round(value || 0)));
+}
+
 function AnalysisReport({ result }) {
   const [activeFactor, setActiveFactor] = useState("impact");
 
@@ -92,6 +96,37 @@ function AnalysisReport({ result }) {
 
   const activeInsight = insightRows.find((row) => row.key === activeFactor) || insightRows[0];
 
+  const keywordScore = clampScore(((result.matched_keywords || []).length / Math.max(1, result.total_job_keywords || 1)) * 100);
+  const formattingScore = clampScore(((result.readability?.readability_score || 0) + (result.contact_checks?.format_status === "good" ? 85 : 60)) / 2);
+  const sectionStructureScore = clampScore(
+    ((result.section_scores || []).slice(0, 5).reduce((sum, item) => sum + (item.score || 0), 0) /
+      Math.max(1, (result.section_scores || []).slice(0, 5).length))
+  );
+  const writingScore = clampScore(((result.bullet_quality?.overall_strength || 0) + (result.readability?.grammar_score || 0)) / 2);
+
+  const pillarItems = [
+    {
+      label: "Keyword Match",
+      score: keywordScore,
+      desc: "Compares resume keywords to job description skills, tools, and qualifications.",
+    },
+    {
+      label: "Formatting & Parsability",
+      score: formattingScore,
+      desc: "Checks ATS-friendly layout, single-column readability, and clean formatting.",
+    },
+    {
+      label: "Section Structure",
+      score: sectionStructureScore,
+      desc: "Verifies required sections: Summary, Experience, Education, and Skills.",
+    },
+    {
+      label: "Writing Quality",
+      score: writingScore,
+      desc: "Evaluates action verbs, quantified results, and spelling or grammar.",
+    },
+  ];
+
   return (
     <section className="report-card">
       <div className="report-head">
@@ -136,6 +171,21 @@ function AnalysisReport({ result }) {
             <span>100</span>
           </div>
         </div>
+      </div>
+
+      <h3>ATS Quality Pillars</h3>
+      <div className="pillar-grid">
+        {pillarItems.map((pillar) => (
+          <article key={pillar.label} className="pillar-card">
+            <div className="pillar-score" aria-label={`${pillar.label} score ${pillar.score}`}>
+              {pillar.score}
+            </div>
+            <div>
+              <strong>{pillar.label}</strong>
+              <p>{pillar.desc}</p>
+            </div>
+          </article>
+        ))}
       </div>
 
       <div className="report-breakdown">

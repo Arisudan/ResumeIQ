@@ -230,10 +230,51 @@ body {
 }
 
 .result-tabs {
-  display: flex;
+  display: none;
   flex-wrap: wrap;
   gap: 8px;
   margin-bottom: 12px;
+}
+
+.workspace-shell {
+  display: grid;
+  grid-template-columns: 156px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+}
+
+.result-pane {
+  min-width: 0;
+}
+
+.result-rail {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #eef0ff;
+  padding: 6px;
+  display: grid;
+  gap: 6px;
+  position: sticky;
+  top: 8px;
+}
+
+.result-rail-item {
+  border: 1px solid transparent;
+  border-radius: 8px;
+  text-align: left;
+  background: transparent;
+  color: #2b255f;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 9px 10px;
+  cursor: pointer;
+}
+
+.result-rail-item.active {
+  background: #3622b6;
+  color: #ffffff;
+  border-color: #2f1daa;
+  box-shadow: 0 8px 16px rgba(53, 34, 160, 0.2);
 }
 
 .result-tab {
@@ -670,6 +711,51 @@ textarea:focus {
   margin-bottom: 14px;
 }
 
+.pillar-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.pillar-card {
+  border: 1px solid var(--border);
+  border-left: 5px solid #7abf2f;
+  border-radius: 8px;
+  padding: 10px;
+  background: #fffdf8;
+  display: grid;
+  grid-template-columns: 52px 1fr;
+  gap: 10px;
+  align-items: start;
+}
+
+.pillar-score {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  background: #f4faec;
+  border: 1px solid #cbe2a8;
+  color: #49751f;
+  font-family: "Sora", sans-serif;
+  font-weight: 700;
+  font-size: 0.92rem;
+  display: grid;
+  place-items: center;
+}
+
+.pillar-card strong {
+  display: block;
+  font-size: 0.92rem;
+}
+
+.pillar-card p {
+  margin: 4px 0 0;
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
 .report-breakdown-score {
   display: grid;
   place-items: center;
@@ -1007,6 +1093,18 @@ textarea:focus {
     grid-template-columns: 1fr;
   }
 
+  .workspace-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .result-rail {
+    display: none;
+  }
+
+  .result-tabs {
+    display: flex;
+  }
+
   .result-topline {
     flex-direction: column;
     align-items: flex-start;
@@ -1023,6 +1121,10 @@ textarea:focus {
   }
 
   .report-breakdown {
+    grid-template-columns: 1fr;
+  }
+
+  .pillar-grid {
     grid-template-columns: 1fr;
   }
 

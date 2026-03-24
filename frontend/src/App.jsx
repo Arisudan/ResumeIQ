@@ -100,6 +100,13 @@ function App() {
     }
   }, [result]);
 
+  const resultTabs = [
+    { key: "breakdown", label: "Overview" },
+    { key: "keywords", label: "Keywords" },
+    { key: "resume", label: "Resume" },
+    ...(!staticOnlyMode ? [{ key: "cover", label: "Cover Letter" }] : []),
+  ];
+
   return (
     <div className="app app-shell">
       <header className="hero-panel">
@@ -153,61 +160,59 @@ function App() {
                     </div>
                   </div>
 
-                  <div className="result-tabs" role="tablist" aria-label="Result sections">
-                    <button
-                      type="button"
-                      className={`result-tab ${activeResultTab === "breakdown" ? "active" : ""}`}
-                      onClick={() => setActiveResultTab("breakdown")}
-                    >
-                      Breakdown
-                    </button>
-                    <button
-                      type="button"
-                      className={`result-tab ${activeResultTab === "keywords" ? "active" : ""}`}
-                      onClick={() => setActiveResultTab("keywords")}
-                    >
-                      Keywords
-                    </button>
-                    <button
-                      type="button"
-                      className={`result-tab ${activeResultTab === "resume" ? "active" : ""}`}
-                      onClick={() => setActiveResultTab("resume")}
-                    >
-                      Optimized Resume
-                    </button>
-                    {!staticOnlyMode && (
-                      <button
-                        type="button"
-                        className={`result-tab ${activeResultTab === "cover" ? "active" : ""}`}
-                        onClick={() => setActiveResultTab("cover")}
-                      >
-                        Cover Letter
-                      </button>
-                    )}
-                  </div>
+                  <div className="workspace-shell">
+                    <aside className="result-rail" role="tablist" aria-label="Analysis sections">
+                      {resultTabs.map((tab) => (
+                        <button
+                          key={tab.key}
+                          type="button"
+                          className={`result-rail-item ${activeResultTab === tab.key ? "active" : ""}`}
+                          onClick={() => setActiveResultTab(tab.key)}
+                          aria-current={activeResultTab === tab.key ? "true" : undefined}
+                        >
+                          {tab.label}
+                        </button>
+                      ))}
+                    </aside>
 
-                  {activeResultTab === "breakdown" && <AnalysisReport result={result} />}
-                  {activeResultTab === "keywords" && (
-                    <KeywordPanel
-                      matched={result.matched_keywords}
-                      missing={result.missing_keywords}
-                    />
-                  )}
-                  {activeResultTab === "resume" && (
-                    <OptimizedResume
-                      text={result.optimized_resume}
-                      changes={result.changes_summary}
-                      changeReasons={result.change_reasons}
-                      truthfulnessNotes={result.truthfulness_notes}
-                    />
-                  )}
-                  {!staticOnlyMode && activeResultTab === "cover" && (
-                    <CoverLetterPanel
-                      resumeText={result.optimized_resume}
-                      jobDescription={result.job_description_used || ""}
-                      controls={result.rewrite_controls}
-                    />
-                  )}
+                    <div className="result-pane">
+                      <div className="result-tabs" role="tablist" aria-label="Result sections">
+                        {resultTabs.map((tab) => (
+                          <button
+                            key={`mobile-${tab.key}`}
+                            type="button"
+                            className={`result-tab ${activeResultTab === tab.key ? "active" : ""}`}
+                            onClick={() => setActiveResultTab(tab.key)}
+                          >
+                            {tab.label}
+                          </button>
+                        ))}
+                      </div>
+
+                      {activeResultTab === "breakdown" && <AnalysisReport result={result} />}
+                      {activeResultTab === "keywords" && (
+                        <KeywordPanel
+                          matched={result.matched_keywords}
+                          missing={result.missing_keywords}
+                        />
+                      )}
+                      {activeResultTab === "resume" && (
+                        <OptimizedResume
+                          text={result.optimized_resume}
+                          changes={result.changes_summary}
+                          changeReasons={result.change_reasons}
+                          truthfulnessNotes={result.truthfulness_notes}
+                        />
+                      )}
+                      {!staticOnlyMode && activeResultTab === "cover" && (
+                        <CoverLetterPanel
+                          resumeText={result.optimized_resume}
+                          jobDescription={result.job_description_used || ""}
+                          controls={result.rewrite_controls}
+                        />
+                      )}
+                    </div>
+                  </div>
                 </section>
               </div>
             </div>
