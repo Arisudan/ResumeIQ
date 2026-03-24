@@ -2,6 +2,7 @@ import mammoth from "mammoth";
 import * as pdfjsLib from "pdfjs-dist";
 import pdfWorkerUrl from "pdfjs-dist/build/pdf.worker.min.mjs?url";
 import { Document, Packer, Paragraph, TextRun } from "docx";
+import { jsPDF } from "jspdf";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorkerUrl;
 
@@ -290,4 +291,35 @@ export async function generateDocxBlobFromText(text) {
   });
 
   return Packer.toBlob(doc);
+}
+
+export async function generatePdfBlobFromText(text) {
+  const doc = new jsPDF({ unit: "pt", format: "a4" });
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const margin = 48;
+  const lineHeight = 18;
+  const maxWidth = pageWidth - margin * 2;
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(11);
+
+  let y = margin;
+  const lines = (text || "").split(/\r?\n/);
+
+  for (const raw of lines) {
+    const line = raw.trim() ? raw : " ";
+    const wrapped = doc.splitTextToSize(line, maxWidth);
+
+    for (const wrappedLine of wrapped) {
+      if (y > pageHeight - margin) {
+        doc.addPage();
+        y = margin;
+      }
+      doc.text(wrappedLine, margin, y);
+      y += lineHeight;
+    }
+  }
+
+  return doc.output("blob");
 }

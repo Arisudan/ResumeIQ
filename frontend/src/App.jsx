@@ -145,9 +145,12 @@ function App() {
                       <p className="coach-kicker">Analysis Workspace</p>
                       <h2 className="panel-title">Your resume scored {result.score} out of 100</h2>
                     </div>
-                    <span className="result-pill">
-                      {(result.missing_keywords || []).length} missing keywords
-                    </span>
+                    <div className="result-top-actions">
+                      <span className="result-pill">
+                        {(result.missing_keywords || []).length} missing keywords
+                      </span>
+                      <DownloadButton optimizedResume={result.optimized_resume} />
+                    </div>
                   </div>
 
                   <div className="result-tabs" role="tablist" aria-label="Result sections">
@@ -206,10 +209,6 @@ function App() {
                     />
                   )}
                 </section>
-              </div>
-
-              <div className="result-col">
-                <DownloadButton optimizedResume={result.optimized_resume} staticOnlyMode={staticOnlyMode} />
               </div>
             </div>
           )}

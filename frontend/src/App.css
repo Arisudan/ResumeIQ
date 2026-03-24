@@ -172,9 +172,17 @@ body {
 .result-topline {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
   margin-bottom: 12px;
+}
+
+.result-top-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .result-pill {
@@ -185,6 +193,40 @@ body {
   font-weight: 700;
   background: #fff9ef;
   color: #7b5032;
+}
+
+.download-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.download-main {
+  width: auto;
+  min-width: 146px;
+  padding: 10px 14px;
+  font-size: 0.88rem;
+}
+
+.download-format-wrap {
+  display: grid;
+  gap: 2px;
+}
+
+.download-format-label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.download-format {
+  min-width: 132px;
+  padding: 8px;
+  font-size: 0.82rem;
+  border-radius: 8px;
 }
 
 .result-tabs {
@@ -968,6 +1010,16 @@ textarea:focus {
   .result-topline {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .result-top-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .download-main {
+    width: auto;
+    min-width: 130px;
   }
 
   .report-breakdown {
