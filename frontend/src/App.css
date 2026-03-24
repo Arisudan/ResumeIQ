@@ -33,6 +33,69 @@ body {
 
 .app-shell {
   position: relative;
+  --motion-reveal-duration: 0.75s;
+  --motion-page-duration: 0.45s;
+  --motion-title-duration: 7s;
+  --motion-spin-duration: 13s;
+  --motion-breathe-duration: 3.2s;
+  --motion-float-duration-1: 4.2s;
+  --motion-float-duration-2: 4.8s;
+  --motion-float-duration-3: 5.1s;
+  --motion-card-duration: 4.5s;
+  --motion-card-shift: 4px;
+  --motion-ticker-duration: 18s;
+  --motion-ping-duration: 1.8s;
+  --motion-shimmer-duration: 2.4s;
+  --motion-ui-transition: 0.22s;
+}
+
+.app-shell.motion-cinematic {
+  --motion-reveal-duration: 0.9s;
+  --motion-page-duration: 0.7s;
+  --motion-title-duration: 12s;
+  --motion-spin-duration: 20s;
+  --motion-breathe-duration: 5.4s;
+  --motion-float-duration-1: 7.8s;
+  --motion-float-duration-2: 8.6s;
+  --motion-float-duration-3: 9.4s;
+  --motion-card-duration: 6.4s;
+  --motion-card-shift: 3px;
+  --motion-ticker-duration: 28s;
+  --motion-ping-duration: 2.8s;
+  --motion-shimmer-duration: 4.1s;
+}
+
+.app-shell.motion-energetic {
+  --motion-reveal-duration: 0.4s;
+  --motion-page-duration: 0.3s;
+  --motion-title-duration: 4.2s;
+  --motion-spin-duration: 8s;
+  --motion-breathe-duration: 2.1s;
+  --motion-float-duration-1: 2.9s;
+  --motion-float-duration-2: 3.2s;
+  --motion-float-duration-3: 3.6s;
+  --motion-card-duration: 2.9s;
+  --motion-card-shift: 6px;
+  --motion-ticker-duration: 10s;
+  --motion-ping-duration: 1.2s;
+  --motion-shimmer-duration: 1.6s;
+}
+
+.app-shell.motion-reduced {
+  --motion-reveal-duration: 0.01ms;
+  --motion-page-duration: 0.01ms;
+  --motion-title-duration: 0.01ms;
+  --motion-spin-duration: 0.01ms;
+  --motion-breathe-duration: 0.01ms;
+  --motion-float-duration-1: 0.01ms;
+  --motion-float-duration-2: 0.01ms;
+  --motion-float-duration-3: 0.01ms;
+  --motion-card-duration: 0.01ms;
+  --motion-card-shift: 0px;
+  --motion-ticker-duration: 0.01ms;
+  --motion-ping-duration: 0.01ms;
+  --motion-shimmer-duration: 0.01ms;
+  --motion-ui-transition: 0.01ms;
 }
 
 .app-shell::before {
@@ -62,7 +125,7 @@ body {
     linear-gradient(125deg, rgba(255, 255, 255, 0.75), rgba(240, 247, 255, 0.92)),
     linear-gradient(160deg, #ffffff 0%, #f4f8ff 60%, #eef6ff 100%);
   box-shadow: 0 14px 26px rgba(44, 63, 92, 0.1);
-  animation: revealUp 0.75s ease both;
+  animation: revealUp var(--motion-reveal-duration) ease both;
 }
 
 .hero-copy h1 {
@@ -80,7 +143,36 @@ body {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  animation: titleFlow 7s linear infinite;
+  animation: titleFlow var(--motion-title-duration) linear infinite;
+}
+
+.motion-controls {
+  margin-top: 12px;
+  display: inline-flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.motion-chip {
+  border: 1px solid #cad7ec;
+  border-radius: 999px;
+  background: #f6f9ff;
+  color: #34517b;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: border-color var(--motion-ui-transition) ease, color var(--motion-ui-transition) ease, background-color var(--motion-ui-transition) ease;
+}
+
+.motion-chip.active {
+  border-color: var(--accent);
+  background: #e8f1ff;
+  color: var(--accent);
+}
+
+.motion-chip:hover {
+  border-color: var(--accent);
 }
 
 .hero-eyebrow {
@@ -144,20 +236,20 @@ body {
 .chip-one {
   top: 12px;
   left: 12px;
-  animation: floatCard 4.2s ease-in-out infinite;
+  animation: floatCard var(--motion-float-duration-1) ease-in-out infinite;
 }
 
 .chip-two {
   right: 2px;
   top: 58px;
-  animation: floatCard 4.8s ease-in-out infinite;
+  animation: floatCard var(--motion-float-duration-2) ease-in-out infinite;
   animation-delay: 0.45s;
 }
 
 .chip-three {
   left: 34px;
   bottom: 18px;
-  animation: floatCard 5.1s ease-in-out infinite;
+  animation: floatCard var(--motion-float-duration-3) ease-in-out infinite;
   animation-delay: 0.95s;
 }
 
@@ -166,7 +258,7 @@ body {
   aspect-ratio: 1;
   border-radius: 999px;
   border: 2px dashed rgba(94, 79, 61, 0.3);
-  animation: spinSlow 13s linear infinite;
+  animation: spinSlow var(--motion-spin-duration) linear infinite;
 }
 
 .orb-core {
@@ -176,7 +268,7 @@ body {
   border-radius: 999px;
   background: linear-gradient(135deg, #2f6fed 0%, #5e96ff 100%);
   box-shadow: 0 12px 28px rgba(47, 111, 237, 0.3);
-  animation: breathe 3.2s ease-in-out infinite;
+  animation: breathe var(--motion-breathe-duration) ease-in-out infinite;
 }
 
 .orb-core::after {
@@ -193,7 +285,7 @@ body {
 }
 
 .page-enter {
-  animation: pageFadeIn 0.45s ease;
+  animation: pageFadeIn var(--motion-page-duration) ease;
 }
 
 .page-switch-btn {
@@ -276,7 +368,7 @@ body {
 }
 
 .animated-card {
-  animation: cardDrift 4.5s ease-in-out infinite;
+  animation: cardDrift var(--motion-card-duration) ease-in-out infinite;
 }
 
 .card-delay-2 {
@@ -353,7 +445,7 @@ body {
   border-radius: 999px;
   background: var(--accent2);
   box-shadow: 0 0 0 0 rgba(31, 157, 85, 0.42);
-  animation: ping 1.8s ease-out infinite;
+  animation: ping var(--motion-ping-duration) ease-out infinite;
 }
 
 .guide-step {
@@ -510,7 +602,7 @@ body {
   gap: 12px;
   white-space: nowrap;
   padding-left: 12px;
-  animation: ticker 18s linear infinite;
+  animation: ticker var(--motion-ticker-duration) linear infinite;
 }
 
 .activity-track span {
@@ -542,7 +634,7 @@ body {
   font-weight: 700;
   padding: 8px 10px;
   cursor: pointer;
-  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  transition: background-color var(--motion-ui-transition) ease, border-color var(--motion-ui-transition) ease, transform var(--motion-ui-transition) ease;
 }
 
 .result-tab.active {
@@ -563,7 +655,7 @@ body {
   padding: 22px;
   margin-bottom: 0;
   box-shadow: 0 8px 20px rgba(40, 55, 80, 0.08);
-  transition: transform 0.22s ease, box-shadow 0.22s ease;
+  transition: transform var(--motion-ui-transition) ease, box-shadow var(--motion-ui-transition) ease;
 }
 
 .card:hover {
@@ -577,7 +669,7 @@ body {
   padding: 22px;
   text-align: center;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--motion-ui-transition) ease;
   margin-bottom: 14px;
   background: rgba(255, 255, 255, 0.01);
 }
@@ -683,7 +775,7 @@ textarea:focus {
   font-weight: 600;
   font-size: 15px;
   cursor: pointer;
-  transition: filter 0.2s ease, transform 0.2s ease;
+  transition: filter var(--motion-ui-transition) ease, transform var(--motion-ui-transition) ease;
 }
 
 .btn-primary:hover:enabled {
@@ -731,7 +823,24 @@ textarea:focus {
   width: 40%;
   height: 100%;
   background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.35), transparent);
-  animation: shimmer 2.4s ease-in-out infinite;
+  animation: shimmer var(--motion-shimmer-duration) ease-in-out infinite;
+}
+
+.app-shell.motion-reduced .hero-animated-title,
+.app-shell.motion-reduced .chip-one,
+.app-shell.motion-reduced .chip-two,
+.app-shell.motion-reduced .chip-three,
+.app-shell.motion-reduced .orb-ring,
+.app-shell.motion-reduced .orb-core,
+.app-shell.motion-reduced .animated-card,
+.app-shell.motion-reduced .activity-track,
+.app-shell.motion-reduced .live-dot,
+.app-shell.motion-reduced .upload-submit-btn:not(:disabled)::after {
+  animation: none !important;
+}
+
+.app-shell.motion-reduced .activity-track {
+  transform: none;
 }
 
 .btn-primary:disabled {
@@ -1414,7 +1523,7 @@ textarea:focus {
     transform: translateY(0px);
   }
   50% {
-    transform: translateY(-7px);
+    transform: translateY(calc(var(--motion-card-shift) * -1.8));
   }
 }
 
@@ -1424,7 +1533,7 @@ textarea:focus {
     transform: translateY(0px);
   }
   50% {
-    transform: translateY(-4px);
+    transform: translateY(calc(var(--motion-card-shift) * -1));
   }
 }
 
@@ -1463,6 +1572,16 @@ textarea:focus {
 
   .hero-floating-cards {
     opacity: 0.75;
+  }
+
+  .motion-controls {
+    margin-top: 10px;
+    width: 100%;
+  }
+
+  .motion-chip {
+    flex: 1;
+    text-align: center;
   }
 
   .floating-chip {
@@ -1557,5 +1676,21 @@ textarea:focus {
 
   .field-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-animated-title,
+  .chip-one,
+  .chip-two,
+  .chip-three,
+  .orb-ring,
+  .orb-core,
+  .animated-card,
+  .activity-track,
+  .live-dot,
+  .upload-submit-btn:not(:disabled)::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
   }
 }
