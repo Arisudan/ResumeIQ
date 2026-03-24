@@ -185,11 +185,16 @@ function App() {
           </div>
         </div>
         <div className="hero-orb" aria-hidden="true">
-          <div className="orbit-line" />
-          <div className="orbit-strip">
-            <span className="orbit-chip orbit-chip-left">Live ATS Preview</span>
-            <span className="orbit-chip orbit-chip-center">Keyword Match Graph</span>
-            <span className="orbit-chip orbit-chip-right">Smart Rewrite Suggestions</span>
+          <div className="orbit-ring">
+            <div className="orbit-item orbit-item-one">
+              <span className="orbit-chip">Live ATS Preview</span>
+            </div>
+            <div className="orbit-item orbit-item-two">
+              <span className="orbit-chip">Keyword Match Graph</span>
+            </div>
+            <div className="orbit-item orbit-item-three">
+              <span className="orbit-chip">Smart Rewrite Suggestions</span>
+            </div>
           </div>
           <div className="orb-core">
             <img className="center-core-logo" src={logoCore} alt="ResumeIQ logo" />

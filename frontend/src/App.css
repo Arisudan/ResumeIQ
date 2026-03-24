@@ -147,36 +147,33 @@ body {
   position: relative;
   display: grid;
   place-items: center;
-  min-height: 280px;
-  width: min(380px, 100%);
+  min-height: 320px;
+  width: min(420px, 100%);
   justify-self: center;
 }
 
-.orbit-line {
+.orbit-ring {
   position: absolute;
-  inset: 0;
+  left: 50%;
   top: 50%;
-  height: 0;
-  border-top: 2px dotted rgba(120, 139, 168, 0.55);
-  transform: translateY(-50%);
+  width: 260px;
+  height: 260px;
+  border: 2px dotted rgba(120, 139, 168, 0.5);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: orbitSpin 22s linear infinite;
   pointer-events: none;
 }
 
-.orbit-strip {
+.orbit-item {
   position: absolute;
-  left: 0;
-  right: 0;
+  left: 50%;
   top: 50%;
-  transform: translateY(-50%);
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-  align-items: center;
-  padding: 0 6px;
+  width: 0;
+  height: 0;
 }
 
 .orbit-chip {
-  justify-self: center;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -184,27 +181,36 @@ body {
   padding: 8px 14px;
   border-radius: 999px;
   border: 1px solid rgba(201, 215, 238, 0.9);
-  background: rgba(255, 255, 255, 0.93);
+  background: rgba(255, 255, 255, 0.96);
   color: #355072;
   font-size: 0.78rem;
   font-weight: 700;
   white-space: nowrap;
-  box-shadow: 0 8px 18px rgba(39, 61, 92, 0.12);
-  max-width: 100%;
+  box-shadow: 0 8px 18px rgba(39, 61, 92, 0.14);
+  transform-origin: center center;
+  animation: counterOrbit 22s linear infinite;
 }
 
-.orbit-chip-center {
-  transform: translateY(-2px);
+.orbit-item-one {
+  transform: rotate(0deg) translateX(130px);
+}
+
+.orbit-item-two {
+  transform: rotate(120deg) translateX(130px);
+}
+
+.orbit-item-three {
+  transform: rotate(240deg) translateX(130px);
 }
 
 .orb-core {
   position: absolute;
-  width: 126px;
-  height: 126px;
+  width: 152px;
+  height: 152px;
   border-radius: 999px;
   background: radial-gradient(circle at 50% 45%, #ffffff 0%, #eef5ff 70%, #dbe8fb 100%);
   border: 1px solid rgba(109, 143, 196, 0.45);
-  box-shadow: 0 12px 28px rgba(33, 60, 103, 0.28);
+  box-shadow: 0 14px 34px rgba(33, 60, 103, 0.3);
   transform-origin: center;
   will-change: transform, box-shadow;
   animation: orbGlide var(--motion-breathe-duration) cubic-bezier(0.4, 0.05, 0.2, 1) infinite;
@@ -222,10 +228,10 @@ body {
 }
 
 .center-core-logo {
-  width: 76px;
-  height: 76px;
+  width: 110px;
+  height: 110px;
   object-fit: contain;
-  filter: drop-shadow(0 4px 10px rgba(20, 47, 92, 0.22));
+  filter: drop-shadow(0 6px 14px rgba(20, 47, 92, 0.24));
   z-index: 2;
 }
 
@@ -1459,6 +1465,24 @@ textarea:focus {
   }
 }
 
+@keyframes orbitSpin {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes counterOrbit {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
 @keyframes titleFlow {
   0% {
     background-position: 0% 50%;
@@ -1546,19 +1570,42 @@ textarea:focus {
   }
 
   .hero-orb {
-    min-height: 220px;
-    width: min(100%, 360px);
+    min-height: 280px;
+    width: min(100%, 420px);
   }
 
-  .orbit-strip {
-    gap: 8px;
-    padding: 0 2px;
+  .orbit-ring {
+    width: 220px;
+    height: 220px;
   }
 
   .orbit-chip {
-    font-size: 0.66rem;
+    font-size: 0.68rem;
     padding: 6px 10px;
     min-height: 34px;
+  }
+
+  .orbit-item-one,
+  .orbit-item-two,
+  .orbit-item-three {
+    transform-origin: center center;
+  }
+
+  .orbit-item-one {
+    transform: rotate(10deg) translateX(110px);
+  }
+
+  .orbit-item-two {
+    transform: rotate(130deg) translateX(110px);
+  }
+
+  .orbit-item-three {
+    transform: rotate(250deg) translateX(110px);
+  }
+
+  .center-core-logo {
+    width: 92px;
+    height: 92px;
   }
 
   .dashboard-shell {
