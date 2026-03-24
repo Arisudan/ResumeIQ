@@ -1,5 +1,8 @@
 :root {
-  --bg: #f3f6fb;
+  --bg: #1d2534;
+  --bg-deep: #131925;
+  --bg-glow-a: rgba(62, 128, 255, 0.18);
+  --bg-glow-b: rgba(41, 199, 154, 0.14);
   --surface: #ffffff;
   --surface2: #f7f9fd;
   --border: #d8e1ec;
@@ -19,7 +22,10 @@
 
 body {
   margin: 0;
-  background: var(--bg);
+  background:
+    radial-gradient(1100px 640px at 10% -10%, rgba(73, 145, 255, 0.24), transparent 60%),
+    radial-gradient(920px 560px at 100% 0%, rgba(38, 190, 152, 0.2), transparent 58%),
+    linear-gradient(145deg, var(--bg) 0%, var(--bg-deep) 100%);
   font-family: "Manrope", sans-serif;
   color: var(--text);
   min-height: 100vh;
@@ -33,83 +39,23 @@ body {
 
 .app-shell {
   position: relative;
-  --motion-reveal-duration: 0.75s;
-  --motion-page-duration: 0.45s;
-  --motion-title-duration: 7s;
-  --motion-spin-duration: 13s;
-  --motion-breathe-duration: 3.2s;
-  --motion-float-duration-1: 4.2s;
-  --motion-float-duration-2: 4.8s;
-  --motion-float-duration-3: 5.1s;
-  --motion-card-duration: 4.5s;
-  --motion-card-shift: 4px;
-  --motion-ticker-duration: 18s;
-  --motion-ping-duration: 1.8s;
-  --motion-shimmer-duration: 2.4s;
-  --motion-ui-transition: 0.22s;
+  z-index: -2;
+  animation: ambientFloat 18s ease-in-out infinite;
 }
 
-.app-shell.motion-cinematic {
-  --motion-reveal-duration: 0.9s;
-  --motion-page-duration: 0.7s;
-  --motion-title-duration: 12s;
-  --motion-spin-duration: 20s;
-  --motion-breathe-duration: 5.4s;
-  --motion-float-duration-1: 7.8s;
-  --motion-float-duration-2: 8.6s;
-  --motion-float-duration-3: 9.4s;
-  --motion-card-duration: 6.4s;
-  --motion-card-shift: 3px;
-  --motion-ticker-duration: 28s;
-  --motion-ping-duration: 2.8s;
-  --motion-shimmer-duration: 4.1s;
-}
-
-.app-shell.motion-energetic {
-  --motion-reveal-duration: 0.4s;
-  --motion-page-duration: 0.3s;
-  --motion-title-duration: 4.2s;
-  --motion-spin-duration: 8s;
-  --motion-breathe-duration: 2.1s;
-  --motion-float-duration-1: 2.9s;
-  --motion-float-duration-2: 3.2s;
-  --motion-float-duration-3: 3.6s;
-  --motion-card-duration: 2.9s;
-  --motion-card-shift: 6px;
-  --motion-ticker-duration: 10s;
-  --motion-ping-duration: 1.2s;
-  --motion-shimmer-duration: 1.6s;
-}
-
-.app-shell.motion-reduced {
-  --motion-reveal-duration: 0.01ms;
-  --motion-page-duration: 0.01ms;
-  --motion-title-duration: 0.01ms;
-  --motion-spin-duration: 0.01ms;
-  --motion-breathe-duration: 0.01ms;
-  --motion-float-duration-1: 0.01ms;
-  --motion-float-duration-2: 0.01ms;
-  --motion-float-duration-3: 0.01ms;
-  --motion-card-duration: 0.01ms;
-  --motion-card-shift: 0px;
-  --motion-ticker-duration: 0.01ms;
-  --motion-ping-duration: 0.01ms;
-  --motion-shimmer-duration: 0.01ms;
-  --motion-ui-transition: 0.01ms;
-}
-
-.app-shell::before {
+.app-shell::after {
   content: "";
   position: fixed;
-  right: -120px;
-  top: -90px;
-  width: 380px;
-  height: 380px;
+  right: -200px;
+  bottom: -180px;
+  width: 760px;
+  height: 760px;
   border-radius: 999px;
-  background: rgba(47, 111, 237, 0.07);
-  filter: blur(26px);
+  background: radial-gradient(circle at 55% 45%, var(--bg-glow-b), transparent 68%);
+  filter: blur(34px);
   pointer-events: none;
-  z-index: -1;
+  z-index: -2;
+  animation: ambientFloat 22s ease-in-out infinite reverse;
 }
 
 .hero-panel {
@@ -144,35 +90,6 @@ body {
   background-clip: text;
   color: transparent;
   animation: titleFlow var(--motion-title-duration) linear infinite;
-}
-
-.motion-controls {
-  margin-top: 12px;
-  display: inline-flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.motion-chip {
-  border: 1px solid #cad7ec;
-  border-radius: 999px;
-  background: #f6f9ff;
-  color: #34517b;
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 6px 10px;
-  cursor: pointer;
-  transition: border-color var(--motion-ui-transition) ease, color var(--motion-ui-transition) ease, background-color var(--motion-ui-transition) ease;
-}
-
-.motion-chip.active {
-  border-color: var(--accent);
-  background: #e8f1ff;
-  color: var(--accent);
-}
-
-.motion-chip:hover {
-  border-color: var(--accent);
 }
 
 .hero-eyebrow {
@@ -654,13 +571,13 @@ body {
   border-radius: var(--radius);
   padding: 22px;
   margin-bottom: 0;
-  box-shadow: 0 8px 20px rgba(40, 55, 80, 0.08);
+  box-shadow: 0 10px 24px rgba(9, 16, 29, 0.28);
   transition: transform var(--motion-ui-transition) ease, box-shadow var(--motion-ui-transition) ease;
 }
 
 .card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 26px rgba(40, 55, 80, 0.12);
+  box-shadow: 0 14px 30px rgba(9, 16, 29, 0.34);
 }
 
 .upload-zone {
@@ -824,23 +741,6 @@ textarea:focus {
   height: 100%;
   background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.35), transparent);
   animation: shimmer var(--motion-shimmer-duration) ease-in-out infinite;
-}
-
-.app-shell.motion-reduced .hero-animated-title,
-.app-shell.motion-reduced .chip-one,
-.app-shell.motion-reduced .chip-two,
-.app-shell.motion-reduced .chip-three,
-.app-shell.motion-reduced .orb-ring,
-.app-shell.motion-reduced .orb-core,
-.app-shell.motion-reduced .animated-card,
-.app-shell.motion-reduced .activity-track,
-.app-shell.motion-reduced .live-dot,
-.app-shell.motion-reduced .upload-submit-btn:not(:disabled)::after {
-  animation: none !important;
-}
-
-.app-shell.motion-reduced .activity-track {
-  transform: none;
 }
 
 .btn-primary:disabled {
@@ -1555,6 +1455,16 @@ textarea:focus {
   }
 }
 
+@keyframes ambientFloat {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(24px, -12px, 0) scale(1.03);
+  }
+}
+
 @media (max-width: 768px) {
   .app {
     padding: 24px 14px;
@@ -1572,16 +1482,6 @@ textarea:focus {
 
   .hero-floating-cards {
     opacity: 0.75;
-  }
-
-  .motion-controls {
-    margin-top: 10px;
-    width: 100%;
-  }
-
-  .motion-chip {
-    flex: 1;
-    text-align: center;
   }
 
   .floating-chip {

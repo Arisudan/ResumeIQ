@@ -14,16 +14,8 @@ import UploadSection from "./components/UploadSection";
 
 function App() {
   const staticOnlyMode = !import.meta.env.VITE_API_BASE_URL;
-  const prefersReducedMotion =
-    typeof window !== "undefined" &&
-    typeof window.matchMedia === "function" &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const [currentPage, setCurrentPage] = useState(() => (window.location.hash === "#report" ? "report" : "upload"));
-  const [motionMode, setMotionMode] = useState(() => (prefersReducedMotion ? "reduced" : "cinematic"));
-  const [result, setResult] = useState(() => {
-    const raw = localStorage.getItem("resumeiq_last_result");
-    return raw ? JSON.parse(raw) : null;
-  });
+  const [currentPage, setCurrentPage] = useState("upload");
+  const [result, setResult] = useState(null);
   const [activeResultTab, setActiveResultTab] = useState("breakdown");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -74,7 +66,6 @@ function App() {
           controls,
         });
         setResult(localResult);
-        localStorage.setItem("resumeiq_last_result", JSON.stringify(localResult));
         setActiveResultTab("breakdown");
         setCurrentPage("report");
         window.location.hash = "report";
@@ -100,7 +91,6 @@ function App() {
 
       const data = await response.json();
       setResult(data);
-      localStorage.setItem("resumeiq_last_result", JSON.stringify(data));
       setActiveResultTab("breakdown");
       setCurrentPage("report");
       window.location.hash = "report";
@@ -120,12 +110,17 @@ function App() {
 
   useEffect(() => {
     const onHashChange = () => {
-      setCurrentPage(window.location.hash === "#report" ? "report" : "upload");
+      const canShowReport = window.location.hash === "#report" && Boolean(result);
+      setCurrentPage(canShowReport ? "report" : "upload");
+      if (!canShowReport && window.location.hash === "#report") {
+        window.location.hash = "upload";
+      }
     };
 
+    onHashChange();
     window.addEventListener("hashchange", onHashChange);
     return () => window.removeEventListener("hashchange", onHashChange);
-  }, []);
+  }, [result]);
 
   const resultTabs = [
     { key: "breakdown", label: "Overview" },
@@ -174,14 +169,8 @@ function App() {
     window.location.hash = "report";
   };
 
-  const motionProfiles = [
-    { key: "cinematic", label: "Cinematic" },
-    { key: "energetic", label: "Energetic" },
-    { key: "reduced", label: "Reduced" },
-  ];
-
   return (
-    <div className={`app app-shell motion-${motionMode}`}>
+    <div className="app app-shell">
       <header className="hero-panel">
         <div className="hero-copy">
           <p className="hero-eyebrow">Interactive Resume Intelligence</p>
@@ -191,20 +180,6 @@ function App() {
             <span className="hero-tag">ATS-first analysis</span>
             <span className="hero-tag">Gemini-powered rewrites</span>
             <span className="hero-tag">One-click DOCX export</span>
-          </div>
-          <div className="motion-controls" role="radiogroup" aria-label="Animation mode">
-            {motionProfiles.map((profile) => (
-              <button
-                key={profile.key}
-                type="button"
-                className={`motion-chip ${motionMode === profile.key ? "active" : ""}`}
-                role="radio"
-                aria-checked={motionMode === profile.key}
-                onClick={() => setMotionMode(profile.key)}
-              >
-                {profile.label}
-              </button>
-            ))}
           </div>
         </div>
         <div className="hero-orb" aria-hidden="true">
