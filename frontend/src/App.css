@@ -39,6 +39,34 @@ body {
 
 .app-shell {
   position: relative;
+  z-index: 0;
+  --motion-reveal-duration: 0.75s;
+  --motion-page-duration: 0.45s;
+  --motion-title-duration: 7s;
+  --motion-spin-duration: 13s;
+  --motion-breathe-duration: 8.4s;
+  --motion-float-duration-1: 4.2s;
+  --motion-float-duration-2: 4.8s;
+  --motion-float-duration-3: 5.1s;
+  --motion-card-duration: 4.5s;
+  --motion-card-shift: 4px;
+  --motion-ticker-duration: 18s;
+  --motion-ping-duration: 1.8s;
+  --motion-shimmer-duration: 2.4s;
+  --motion-ui-transition: 0.22s;
+}
+
+.app-shell::before {
+  content: "";
+  position: fixed;
+  left: -140px;
+  top: -160px;
+  width: 620px;
+  height: 620px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 35% 40%, var(--bg-glow-a), transparent 65%);
+  filter: blur(28px);
+  pointer-events: none;
   z-index: -2;
   animation: ambientFloat 18s ease-in-out infinite;
 }
@@ -185,7 +213,9 @@ body {
   border-radius: 999px;
   background: linear-gradient(135deg, #2f6fed 0%, #5e96ff 100%);
   box-shadow: 0 12px 28px rgba(47, 111, 237, 0.3);
-  animation: breathe var(--motion-breathe-duration) ease-in-out infinite;
+  transform-origin: center;
+  will-change: transform, box-shadow;
+  animation: orbGlide var(--motion-breathe-duration) cubic-bezier(0.4, 0.05, 0.2, 1) infinite;
 }
 
 .orb-core::after {
@@ -194,6 +224,7 @@ body {
   inset: 12px;
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.45);
+  animation: ringSheen calc(var(--motion-breathe-duration) * 1.1) ease-in-out infinite;
 }
 
 .main-layout {
@@ -1398,13 +1429,31 @@ textarea:focus {
   }
 }
 
-@keyframes breathe {
+@keyframes orbGlide {
   0%,
   100% {
+    transform: translateY(0) rotate(0deg);
+    box-shadow: 0 12px 28px rgba(47, 111, 237, 0.3);
+  }
+  35% {
+    transform: translateY(-4px) rotate(1.2deg);
+    box-shadow: 0 16px 34px rgba(47, 111, 237, 0.34);
+  }
+  70% {
+    transform: translateY(2px) rotate(-0.8deg);
+    box-shadow: 0 11px 24px rgba(47, 111, 237, 0.28);
+  }
+}
+
+@keyframes ringSheen {
+  0%,
+  100% {
+    opacity: 0.44;
     transform: scale(1);
   }
   50% {
-    transform: scale(1.05);
+    opacity: 0.66;
+    transform: scale(1.04);
   }
 }
 
