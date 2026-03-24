@@ -173,7 +173,8 @@ function App() {
     <div className="app app-shell">
       <header className="hero-panel">
         <div className="hero-copy">
-          <h1>ResumeIQ</h1>
+          <p className="hero-eyebrow">Interactive Resume Intelligence</p>
+          <h1 className="hero-animated-title">ResumeIQ</h1>
           <p className="subtitle">A resume lab that explains your score, fixes weak sections, and helps you apply faster.</p>
           <div className="hero-tag-row">
             <span className="hero-tag">ATS-first analysis</span>
@@ -182,6 +183,11 @@ function App() {
           </div>
         </div>
         <div className="hero-orb" aria-hidden="true">
+          <div className="hero-floating-cards">
+            <div className="floating-chip chip-one">Live ATS Preview</div>
+            <div className="floating-chip chip-two">Keyword Match Graph</div>
+            <div className="floating-chip chip-three">Smart Rewrite Suggestions</div>
+          </div>
           <div className="orb-ring" />
           <div className="orb-core" />
         </div>
@@ -208,6 +214,11 @@ function App() {
             <section className="card setup-guide">
               <p className="coach-kicker">Quick Start</p>
               <h2 className="panel-title">Drop resume, paste JD, run analysis</h2>
+              <div className="live-meter">
+                <span className="live-dot" />
+                <strong>Interactive mode active</strong>
+                <small>{loading ? "Running analysis pulse..." : "Waiting for your next action"}</small>
+              </div>
               <div className="guide-list">
                 {quickSteps.map((step, index) => (
                   <div key={step.title} className={`guide-step ${step.complete ? "complete" : "pending"}`}>
@@ -269,19 +280,19 @@ function App() {
             </div>
 
             <div className="dashboard-kpis">
-              <div className="kpi-card">
+              <div className="kpi-card animated-card card-delay-1">
                 <strong>{result?.score ?? 0}</strong>
                 <span>ATS Score</span>
               </div>
-              <div className="kpi-card">
+              <div className="kpi-card animated-card card-delay-2">
                 <strong>{matchedCount}</strong>
                 <span>Matched</span>
               </div>
-              <div className="kpi-card">
+              <div className="kpi-card animated-card card-delay-3">
                 <strong>{missingCount}</strong>
                 <span>Missing</span>
               </div>
-              <div className="kpi-card">
+              <div className="kpi-card animated-card card-delay-4">
                 <strong>{deltaScore >= 0 ? `+${deltaScore}` : deltaScore}</strong>
                 <span>Projected Gain</span>
               </div>
@@ -322,6 +333,19 @@ function App() {
                     {tab.label}
                   </button>
                 ))}
+              </div>
+
+              <div className="activity-rail" aria-label="Live activity">
+                <div className="activity-track">
+                  <span>Resume parsed</span>
+                  <span>Sections weighted</span>
+                  <span>Keywords clustered</span>
+                  <span>Rewrite engine tuned</span>
+                  <span>Export ready</span>
+                  <span>Resume parsed</span>
+                  <span>Sections weighted</span>
+                  <span>Keywords clustered</span>
+                </div>
               </div>
 
               {activeResultTab === "breakdown" && result && <AnalysisReport result={result} />}

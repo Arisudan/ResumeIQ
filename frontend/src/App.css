@@ -74,6 +74,15 @@ body {
   color: #201b14;
 }
 
+.hero-animated-title {
+  background: linear-gradient(120deg, #1f2a37 0%, #2f6fed 40%, #1f9d55 75%, #1f2a37 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: titleFlow 7s linear infinite;
+}
+
 .hero-eyebrow {
   margin: 0 0 8px;
   text-transform: uppercase;
@@ -112,6 +121,44 @@ body {
   display: grid;
   place-items: center;
   min-height: 170px;
+}
+
+.hero-floating-cards {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.floating-chip {
+  position: absolute;
+  border: 1px solid #c9d7ee;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #395176;
+  box-shadow: 0 8px 18px rgba(39, 61, 92, 0.15);
+}
+
+.chip-one {
+  top: 12px;
+  left: 12px;
+  animation: floatCard 4.2s ease-in-out infinite;
+}
+
+.chip-two {
+  right: 2px;
+  top: 58px;
+  animation: floatCard 4.8s ease-in-out infinite;
+  animation-delay: 0.45s;
+}
+
+.chip-three {
+  left: 34px;
+  bottom: 18px;
+  animation: floatCard 5.1s ease-in-out infinite;
+  animation-delay: 0.95s;
 }
 
 .orb-ring {
@@ -228,6 +275,22 @@ body {
   gap: 2px;
 }
 
+.animated-card {
+  animation: cardDrift 4.5s ease-in-out infinite;
+}
+
+.card-delay-2 {
+  animation-delay: 0.3s;
+}
+
+.card-delay-3 {
+  animation-delay: 0.6s;
+}
+
+.card-delay-4 {
+  animation-delay: 0.9s;
+}
+
 .kpi-card strong {
   font-size: 1.05rem;
   font-family: "Sora", sans-serif;
@@ -262,6 +325,35 @@ body {
 .guide-list {
   display: grid;
   gap: 8px;
+}
+
+.live-meter {
+  border: 1px solid #ccdaef;
+  background: #f6faff;
+  border-radius: 10px;
+  padding: 9px 10px;
+  display: grid;
+  gap: 2px;
+  margin-bottom: 10px;
+}
+
+.live-meter strong {
+  font-size: 0.82rem;
+  color: #28406a;
+}
+
+.live-meter small {
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+
+.live-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: var(--accent2);
+  box-shadow: 0 0 0 0 rgba(31, 157, 85, 0.42);
+  animation: ping 1.8s ease-out infinite;
 }
 
 .guide-step {
@@ -401,6 +493,44 @@ body {
   flex-wrap: wrap;
   gap: 8px;
   margin-bottom: 12px;
+}
+
+.activity-rail {
+  border: 1px dashed #c9d7ee;
+  border-radius: 8px;
+  background: #f7faff;
+  padding: 8px 0;
+  margin: -2px 0 12px;
+  overflow: hidden;
+}
+
+.activity-track {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  white-space: nowrap;
+  padding-left: 12px;
+  animation: ticker 18s linear infinite;
+}
+
+.activity-track span {
+  position: relative;
+  font-size: 0.75rem;
+  color: #36527e;
+  font-weight: 700;
+  padding-right: 12px;
+}
+
+.activity-track span::after {
+  content: "";
+  position: absolute;
+  right: 2px;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  transform: translateY(-50%);
+  border-radius: 999px;
+  background: #88acd8;
 }
 
 .result-tab {
@@ -1269,6 +1399,53 @@ textarea:focus {
   }
 }
 
+@keyframes titleFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+@keyframes floatCard {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+@keyframes cardDrift {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes ticker {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes ping {
+  0% {
+    box-shadow: 0 0 0 0 rgba(31, 157, 85, 0.42);
+  }
+  100% {
+    box-shadow: 0 0 0 12px rgba(31, 157, 85, 0);
+  }
+}
+
 @media (max-width: 768px) {
   .app {
     padding: 24px 14px;
@@ -1282,6 +1459,24 @@ textarea:focus {
 
   .hero-orb {
     min-height: 130px;
+  }
+
+  .hero-floating-cards {
+    opacity: 0.75;
+  }
+
+  .floating-chip {
+    font-size: 0.68rem;
+    padding: 5px 8px;
+  }
+
+  .chip-two {
+    right: 8px;
+  }
+
+  .chip-three {
+    left: 10px;
+    bottom: 12px;
   }
 
   .dashboard-shell {
