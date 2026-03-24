@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import { apiUrl, authHeaders } from "./api";
 import { runStaticAnalysis } from "./localEngine";
@@ -12,47 +12,10 @@ import OptimizedResume from "./components/OptimizedResume";
 import ScoreCard from "./components/ScoreCard";
 import UploadSection from "./components/UploadSection";
 
-function GeminiNanaBananaCard({ result, staticOnlyMode }) {
-  const controls = result.rewrite_controls || {};
-  const quickTips = (result.recommendations || []).slice(0, 3);
-
-  return (
-    <section className="card gemini-coach">
-      <div className="coach-head">
-        <p className="coach-kicker">Gemini Nana Banana Coach</p>
-        <span className={`coach-pill ${staticOnlyMode ? "local" : "live"}`}>
-          {staticOnlyMode ? "Preview Mode" : "Gemini Live"}
-        </span>
-      </div>
-      <h2 className="panel-title">What to change first for the biggest score jump</h2>
-
-      <div className="coach-chip-row">
-        <span className="coach-chip">Role: {controls.role_template || "software"}</span>
-        <span className="coach-chip">Tone: {controls.tone || "professional"}</span>
-        <span className="coach-chip">Length: {controls.length_mode || "balanced"}</span>
-        <span className="coach-chip">Region: {controls.region_style || "US"}</span>
-      </div>
-
-      <ul className="changes-list" style={{ marginBottom: 0 }}>
-        {quickTips.length ? (
-          quickTips.map((tip, index) => <li key={`${tip}-${index}`}>{tip}</li>)
-        ) : (
-          <li>Use measurable outcomes in bullets and keep keywords naturally placed.</li>
-        )}
-      </ul>
-
-      <p className="helper-text" style={{ marginTop: "12px" }}>
-        {staticOnlyMode
-          ? "Connect your backend API to unlock live Gemini rewrites and cover-letter generation."
-          : "This guidance is generated with your Gemini-backed analysis context."}
-      </p>
-    </section>
-  );
-}
-
 function App() {
   const staticOnlyMode = !import.meta.env.VITE_API_BASE_URL;
   const [result, setResult] = useState(null);
+  const [activeResultTab, setActiveResultTab] = useState("breakdown");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [token, setToken] = useState(localStorage.getItem("resumeiq_token") || "");
@@ -99,6 +62,7 @@ function App() {
           controls,
         });
         setResult(localResult);
+        setActiveResultTab("breakdown");
         return;
       }
 
@@ -121,6 +85,7 @@ function App() {
 
       const data = await response.json();
       setResult(data);
+      setActiveResultTab("breakdown");
     } catch (err) {
       setError(err.message || "Unexpected error occurred.");
       setResult(null);
@@ -128,6 +93,12 @@ function App() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (!result) {
+      setActiveResultTab("breakdown");
+    }
+  }, [result]);
 
   return (
     <div className="app app-shell">
@@ -144,7 +115,7 @@ function App() {
         </div>
         <div className="hero-orb" aria-hidden="true">
           <div className="orb-ring" />
-          <div className="orb-core">NANA<br />BANANA</div>
+          <div className="orb-core" />
         </div>
       </header>
 
@@ -159,34 +130,88 @@ function App() {
 
         <div className="stack">
           {result && (
-            <>
-              <ScoreCard
-                score={result.score}
-                matched={result.matched_keywords}
-                missing={result.missing_keywords}
-                total={result.total_job_keywords}
-              />
-              <GeminiNanaBananaCard result={result} staticOnlyMode={staticOnlyMode} />
-              <KeywordPanel
-                matched={result.matched_keywords}
-                missing={result.missing_keywords}
-              />
-              <AnalysisReport result={result} />
-              <OptimizedResume
-                text={result.optimized_resume}
-                changes={result.changes_summary}
-                changeReasons={result.change_reasons}
-                truthfulnessNotes={result.truthfulness_notes}
-              />
-              {!staticOnlyMode && (
-                <CoverLetterPanel
-                  resumeText={result.optimized_resume}
-                  jobDescription={result.job_description_used || ""}
-                  controls={result.rewrite_controls}
+            <div className="result-grid">
+              <div className="result-col">
+                <ScoreCard
+                  score={result.score}
+                  matched={result.matched_keywords}
+                  missing={result.missing_keywords}
+                  total={result.total_job_keywords}
                 />
-              )}
-              <DownloadButton optimizedResume={result.optimized_resume} staticOnlyMode={staticOnlyMode} />
-            </>
+
+                <section className="card result-workspace">
+                  <div className="result-topline">
+                    <div>
+                      <p className="coach-kicker">Analysis Workspace</p>
+                      <h2 className="panel-title">Your resume scored {result.score} out of 100</h2>
+                    </div>
+                    <span className="result-pill">
+                      {(result.missing_keywords || []).length} missing keywords
+                    </span>
+                  </div>
+
+                  <div className="result-tabs" role="tablist" aria-label="Result sections">
+                    <button
+                      type="button"
+                      className={`result-tab ${activeResultTab === "breakdown" ? "active" : ""}`}
+                      onClick={() => setActiveResultTab("breakdown")}
+                    >
+                      Breakdown
+                    </button>
+                    <button
+                      type="button"
+                      className={`result-tab ${activeResultTab === "keywords" ? "active" : ""}`}
+                      onClick={() => setActiveResultTab("keywords")}
+                    >
+                      Keywords
+                    </button>
+                    <button
+                      type="button"
+                      className={`result-tab ${activeResultTab === "resume" ? "active" : ""}`}
+                      onClick={() => setActiveResultTab("resume")}
+                    >
+                      Optimized Resume
+                    </button>
+                    {!staticOnlyMode && (
+                      <button
+                        type="button"
+                        className={`result-tab ${activeResultTab === "cover" ? "active" : ""}`}
+                        onClick={() => setActiveResultTab("cover")}
+                      >
+                        Cover Letter
+                      </button>
+                    )}
+                  </div>
+
+                  {activeResultTab === "breakdown" && <AnalysisReport result={result} />}
+                  {activeResultTab === "keywords" && (
+                    <KeywordPanel
+                      matched={result.matched_keywords}
+                      missing={result.missing_keywords}
+                    />
+                  )}
+                  {activeResultTab === "resume" && (
+                    <OptimizedResume
+                      text={result.optimized_resume}
+                      changes={result.changes_summary}
+                      changeReasons={result.change_reasons}
+                      truthfulnessNotes={result.truthfulness_notes}
+                    />
+                  )}
+                  {!staticOnlyMode && activeResultTab === "cover" && (
+                    <CoverLetterPanel
+                      resumeText={result.optimized_resume}
+                      jobDescription={result.job_description_used || ""}
+                      controls={result.rewrite_controls}
+                    />
+                  )}
+                </section>
+              </div>
+
+              <div className="result-col">
+                <DownloadButton optimizedResume={result.optimized_resume} staticOnlyMode={staticOnlyMode} />
+              </div>
+            </div>
           )}
 
           {!result && !loading && (

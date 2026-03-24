@@ -13,7 +13,7 @@ function statusClass(score) {
 }
 
 function AnalysisReport({ result }) {
-  const [showExplanation, setShowExplanation] = useState(true);
+  const [activeFactor, setActiveFactor] = useState("impact");
 
   const improvement = result.score_improvement_estimate || {
     before: result.score,
@@ -21,10 +21,7 @@ function AnalysisReport({ result }) {
     delta: 0,
   };
 
-  const topFactors = useMemo(() => {
-    const factors = result.ats_factor_breakdown || [];
-    return factors.slice(0, 4);
-  }, [result.ats_factor_breakdown]);
+  const topFactors = useMemo(() => (result.ats_factor_breakdown || []).slice(0, 4), [result.ats_factor_breakdown]);
 
   const priorityFixes = useMemo(() => {
     const fixes = [];
@@ -48,48 +45,73 @@ function AnalysisReport({ result }) {
 
   const insightRows = [
     {
+      key: "impact",
       label: "Impact",
       score: result.bullet_quality?.overall_strength || 0,
       note: `${result.bullet_quality?.achievement_bullets || 0} outcome bullets`,
+      checks: [
+        "Quantify impact in bullets",
+        "Use strong action verbs",
+        "Highlight outcomes, not only tasks",
+      ],
     },
     {
+      key: "brevity",
       label: "Brevity",
       score: result.readability?.readability_score || 0,
       note: `${result.readability?.avg_words_per_sentence || 0} avg words/sentence`,
+      checks: [
+        "Keep each bullet to one clear point",
+        "Trim filler words and repeated phrasing",
+        "Prefer concise, measurable statements",
+      ],
     },
     {
+      key: "style",
       label: "Style",
       score: result.readability?.grammar_score || 0,
       note: result.contact_checks?.format_status || "review",
+      checks: [
+        "Maintain consistent tense",
+        "Avoid grammar and punctuation issues",
+        "Use clean section formatting",
+      ],
     },
     {
+      key: "skills",
       label: "Skills",
       score: result.template_alignment?.score || 0,
       note: `${(result.matched_keywords || []).length}/${result.total_job_keywords || 0} matched`,
+      checks: [
+        "Mirror high-priority job keywords",
+        "Place critical skills in Experience + Skills",
+        "Prioritize role-relevant tools first",
+      ],
     },
   ];
 
+  const activeInsight = insightRows.find((row) => row.key === activeFactor) || insightRows[0];
+
   return (
-    <section className="card report-card">
+    <section className="report-card">
       <div className="report-head">
         <h2 className="panel-title" style={{ marginBottom: 0 }}>Resume Performance Report</h2>
-        <button
-          type="button"
-          className="btn-secondary"
-          onClick={() => setShowExplanation((prev) => !prev)}
-        >
-          {showExplanation ? "Hide Explanation" : "Explain My Score"}
-        </button>
+        <span className={`mini-status ${statusClass(result.score || 0)}`}>{statusLabel(result.score || 0)}</span>
       </div>
 
       <div className="insight-quad">
         {insightRows.map((item) => (
-          <div key={item.label} className="insight-tile">
+          <button
+            key={item.label}
+            type="button"
+            className={`insight-tile ${activeFactor === item.key ? "active" : ""}`}
+            onClick={() => setActiveFactor(item.key)}
+          >
             <span className="insight-kicker">{item.label}</span>
             <strong>{item.score}/100</strong>
             <span className={`mini-status ${statusClass(item.score)}`}>{statusLabel(item.score)}</span>
             <small>{item.note}</small>
-          </div>
+          </button>
         ))}
       </div>
 
@@ -116,61 +138,50 @@ function AnalysisReport({ result }) {
         </div>
       </div>
 
-      {showExplanation && (
-        <>
-          <h3>Factor Breakdown</h3>
-          <div className="section-score-list">
-            {topFactors.map((item) => (
-              <div key={item.factor} className="section-score-item">
-                <div className="section-score-head">
-                  <span>{item.factor}</span>
-                  <span>{item.score}%</span>
-                </div>
-                <div className="mini-bar-track">
-                  <div className="mini-bar-fill" style={{ width: `${item.score}%` }} />
-                </div>
-                <small className="helper-text" style={{ marginTop: 8, display: "block" }}>
-                  Weight {item.weight}% and contribution {item.contribution}
-                </small>
-              </div>
-            ))}
+      <div className="report-breakdown">
+        <div className="report-breakdown-score">
+          <div className="score-circle-mini">
+            <strong>{activeInsight.score}</strong>
+            <span>{activeInsight.label}</span>
           </div>
-
-          <h3>Top Priority Fixes</h3>
-          <div className="priority-fixes">
-            {priorityFixes.map((fix, index) => (
-              <div key={`${fix}-${index}`} className="fix-item">
-                <span className="fix-index">{index + 1}</span>
-                <span>{fix}</span>
-              </div>
-            ))}
-          </div>
-
-          <h3>Section Match Strength</h3>
-          <div className="section-score-list">
-            {(result.section_scores || []).slice(0, 6).map((item) => (
-              <div key={item.section} className="section-score-item">
-                <div className="section-score-head">
-                  <span>{item.section}</span>
-                  <span>{item.score}%</span>
-                </div>
-                <div className="mini-bar-track">
-                  <div className="mini-bar-fill" style={{ width: `${item.score}%` }} />
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <h3>Line-Level Guidance</h3>
-          <ul className="changes-list" style={{ marginBottom: "16px" }}>
-            {(result.keyword_placement || []).slice(0, 5).map((item, index) => (
-              <li key={`${item.keyword}-${index}`}>
-                <strong>{item.keyword}</strong> in <strong>{item.section}</strong>: {item.reason}
-              </li>
+        </div>
+        <div>
+          <h3 style={{ marginTop: 0 }}>{activeInsight.label} Checklist</h3>
+          <ul className="check-list">
+            {activeInsight.checks.map((check, idx) => (
+              <li key={`${check}-${idx}`}>{check}</li>
             ))}
           </ul>
-        </>
-      )}
+        </div>
+      </div>
+
+      <h3>Factor Breakdown</h3>
+      <div className="section-score-list">
+        {topFactors.map((item) => (
+          <div key={item.factor} className="section-score-item">
+            <div className="section-score-head">
+              <span>{item.factor}</span>
+              <span>{item.score}%</span>
+            </div>
+            <div className="mini-bar-track">
+              <div className="mini-bar-fill" style={{ width: `${item.score}%` }} />
+            </div>
+            <small className="helper-text" style={{ marginTop: 8, display: "block" }}>
+              Weight {item.weight}% and contribution {item.contribution}
+            </small>
+          </div>
+        ))}
+      </div>
+
+      <h3>Top Priority Fixes</h3>
+      <div className="priority-fixes">
+        {priorityFixes.map((fix, index) => (
+          <div key={`${fix}-${index}`} className="fix-item">
+            <span className="fix-index">{index + 1}</span>
+            <span>{fix}</span>
+          </div>
+        ))}
+      </div>
 
       <h3>Risk and Validation Signals</h3>
       <div className="insight-grid">
