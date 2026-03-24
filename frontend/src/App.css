@@ -161,7 +161,6 @@ body {
   border: 2px dotted rgba(120, 139, 168, 0.5);
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  animation: orbitSpin 22s linear infinite;
   pointer-events: none;
 }
 
@@ -171,6 +170,7 @@ body {
   top: 50%;
   width: 0;
   height: 0;
+  animation: orbitAround 22s linear infinite;
 }
 
 .orbit-chip {
@@ -192,15 +192,18 @@ body {
 }
 
 .orbit-item-one {
-  transform: rotate(0deg) translateX(130px);
+  --orbit-angle: 18deg;
+  --orbit-radius: 130px;
 }
 
 .orbit-item-two {
-  transform: rotate(120deg) translateX(130px);
+  --orbit-angle: 138deg;
+  --orbit-radius: 130px;
 }
 
 .orbit-item-three {
-  transform: rotate(240deg) translateX(130px);
+  --orbit-angle: 258deg;
+  --orbit-radius: 130px;
 }
 
 .orb-core {
@@ -228,8 +231,8 @@ body {
 }
 
 .center-core-logo {
-  width: 110px;
-  height: 110px;
+  width: 86px;
+  height: 86px;
   object-fit: contain;
   filter: drop-shadow(0 6px 14px rgba(20, 47, 92, 0.24));
   z-index: 2;
@@ -1465,21 +1468,21 @@ textarea:focus {
   }
 }
 
-@keyframes orbitSpin {
-  from {
-    transform: translate(-50%, -50%) rotate(0deg);
-  }
-  to {
-    transform: translate(-50%, -50%) rotate(360deg);
-  }
-}
-
 @keyframes counterOrbit {
   from {
     transform: rotate(0deg);
   }
   to {
     transform: rotate(-360deg);
+  }
+}
+
+@keyframes orbitAround {
+  from {
+    transform: rotate(var(--orbit-angle)) translateX(var(--orbit-radius)) rotate(calc(-1 * var(--orbit-angle)));
+  }
+  to {
+    transform: rotate(calc(var(--orbit-angle) + 360deg)) translateX(var(--orbit-radius)) rotate(calc(-1 * (var(--orbit-angle) + 360deg)));
   }
 }
 
@@ -1579,33 +1582,19 @@ textarea:focus {
     height: 220px;
   }
 
+  .orbit-item {
+    animation-duration: 22s;
+  }
+
   .orbit-chip {
     font-size: 0.68rem;
     padding: 6px 10px;
     min-height: 34px;
   }
 
-  .orbit-item-one,
-  .orbit-item-two,
-  .orbit-item-three {
-    transform-origin: center center;
-  }
-
-  .orbit-item-one {
-    transform: rotate(10deg) translateX(110px);
-  }
-
-  .orbit-item-two {
-    transform: rotate(130deg) translateX(110px);
-  }
-
-  .orbit-item-three {
-    transform: rotate(250deg) translateX(110px);
-  }
-
   .center-core-logo {
-    width: 92px;
-    height: 92px;
+    width: 72px;
+    height: 72px;
   }
 
   .dashboard-shell {
@@ -1691,6 +1680,8 @@ textarea:focus {
 
 @media (prefers-reduced-motion: reduce) {
   .hero-animated-title,
+  .orbit-item,
+  .orbit-chip,
   .orb-core,
   .animated-card,
   .activity-track,
