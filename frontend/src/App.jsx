@@ -143,7 +143,6 @@ function App() {
     <div className="app app-shell">
       <header className="hero-panel">
         <div className="hero-copy">
-          <p className="hero-eyebrow">AI Resume Intelligence Studio</p>
           <h1>ResumeIQ</h1>
           <p className="subtitle">A resume lab that explains your score, fixes weak sections, and helps you apply faster.</p>
           <div className="hero-tag-row">

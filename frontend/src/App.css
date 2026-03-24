@@ -128,6 +128,7 @@ body {
   border-radius: 999px;
   background: linear-gradient(135deg, #2f6fed 0%, #5e96ff 100%);
   box-shadow: 0 12px 28px rgba(47, 111, 237, 0.3);
+  animation: breathe 3.2s ease-in-out infinite;
 }
 
 .orb-core::after {
@@ -390,12 +391,14 @@ body {
   font-weight: 700;
   padding: 8px 10px;
   cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
 .result-tab.active {
   border-color: var(--accent);
   background: #eaf1ff;
   color: var(--accent);
+  transform: translateY(-1px);
 }
 
 .setup-grid > * {
@@ -409,6 +412,12 @@ body {
   padding: 22px;
   margin-bottom: 0;
   box-shadow: 0 8px 20px rgba(40, 55, 80, 0.08);
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(40, 55, 80, 0.12);
 }
 
 .upload-zone {
@@ -528,6 +537,39 @@ textarea:focus {
 .btn-primary:hover:enabled {
   filter: brightness(1.15);
   transform: translateY(-1px);
+}
+
+.upload-submit-bar {
+  margin-top: 14px;
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+  position: sticky;
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), var(--surface));
+  z-index: 4;
+}
+
+.upload-submit-hint {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.upload-submit-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.upload-submit-btn:not(:disabled)::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  animation: shimmer 2.4s ease-in-out infinite;
 }
 
 .btn-primary:disabled {
@@ -1161,6 +1203,25 @@ textarea:focus {
   }
 }
 
+@keyframes shimmer {
+  0% {
+    left: -50%;
+  }
+  100% {
+    left: 120%;
+  }
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
 @media (max-width: 768px) {
   .app {
     padding: 24px 14px;
@@ -1193,6 +1254,11 @@ textarea:focus {
   .dashboard-nav-items {
     display: flex;
     flex-wrap: wrap;
+  }
+
+  .upload-submit-bar {
+    position: static;
+    background: transparent;
   }
 
   .dashboard-nav-btn {

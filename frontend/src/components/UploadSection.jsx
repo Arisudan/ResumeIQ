@@ -15,6 +15,7 @@ function UploadSection({ onSubmit, loading, onProgressChange }) {
   const [language, setLanguage] = useState("English");
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState("");
+  const canSubmit = Boolean(resumeFile) && Boolean(jobDescription.trim());
 
   const handleFile = (file) => {
     if (!file) {
@@ -210,8 +211,11 @@ function UploadSection({ onSubmit, loading, onProgressChange }) {
 
       {error && <div className="inline-error">{error}</div>}
 
-      <div style={{ marginTop: "14px" }}>
-        <button className="btn-primary" type="submit" disabled={loading}>
+      <div className="upload-submit-bar">
+        <span className="upload-submit-hint">
+          {canSubmit ? "Ready to analyze" : "Add resume and job description to enable analysis"}
+        </span>
+        <button className="btn-primary upload-submit-btn" type="submit" disabled={loading || !canSubmit}>
           Analyze Resume →
         </button>
       </div>
