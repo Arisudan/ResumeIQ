@@ -183,22 +183,11 @@ function App() {
           </div>
         </div>
         <div className="hero-orb" aria-hidden="true">
-          <div className="solar-orbits">
-            <div className="orbit-track orbit-one">
-              <div className="orbit-planet">
-                <span className="orbit-label">Live ATS Preview</span>
-              </div>
-            </div>
-            <div className="orbit-track orbit-two reverse">
-              <div className="orbit-planet">
-                <span className="orbit-label">Keyword Match Graph</span>
-              </div>
-            </div>
-            <div className="orbit-track orbit-three">
-              <div className="orbit-planet">
-                <span className="orbit-label">Smart Rewrite Suggestions</span>
-              </div>
-            </div>
+          <div className="orbit-line" />
+          <div className="orbit-strip">
+            <span className="orbit-chip orbit-chip-left">Live ATS Preview</span>
+            <span className="orbit-chip orbit-chip-center">Keyword Match Graph</span>
+            <span className="orbit-chip orbit-chip-right">Smart Rewrite Suggestions</span>
           </div>
           <div className="orb-core">
             <img className="center-core-logo" src="/logo.png" alt="ResumeIQ logo" />
