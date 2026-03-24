@@ -1,6 +1,6 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-function UploadSection({ onSubmit, loading }) {
+function UploadSection({ onSubmit, loading, onProgressChange }) {
   const fileInputRef = useRef(null);
   const [resumeFile, setResumeFile] = useState(null);
   const [jobDescription, setJobDescription] = useState("");
@@ -66,6 +66,15 @@ function UploadSection({ onSubmit, loading }) {
     formData.append("language", language);
     await onSubmit(formData);
   };
+
+  useEffect(() => {
+    if (typeof onProgressChange === "function") {
+      onProgressChange({
+        hasFile: Boolean(resumeFile),
+        hasJobDescription: Boolean(jobDescription.trim()),
+      });
+    }
+  }, [resumeFile, jobDescription, onProgressChange]);
 
   return (
     <form className="card" onSubmit={handleSubmit}>

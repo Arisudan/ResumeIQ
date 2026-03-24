@@ -18,6 +18,8 @@ function App() {
   const [activeResultTab, setActiveResultTab] = useState("breakdown");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [hasDownloaded, setHasDownloaded] = useState(false);
+  const [formProgress, setFormProgress] = useState({ hasFile: false, hasJobDescription: false });
   const [token, setToken] = useState(localStorage.getItem("resumeiq_token") || "");
   const [user, setUser] = useState(() => {
     const raw = localStorage.getItem("resumeiq_user");
@@ -41,6 +43,7 @@ function App() {
   const handleAnalyze = async (formData) => {
     setLoading(true);
     setError("");
+    setHasDownloaded(false);
 
     try {
       if (staticOnlyMode) {
@@ -118,6 +121,24 @@ function App() {
   const missingCount = (result?.missing_keywords || []).length;
   const deltaScore = result?.score_improvement_estimate?.delta ?? 0;
 
+  const quickSteps = [
+    {
+      title: "Upload",
+      desc: "Add PDF, DOCX, or TXT resume.",
+      complete: formProgress.hasFile,
+    },
+    {
+      title: "Analyze",
+      desc: "Get ATS score, keyword gaps, and risk signals.",
+      complete: Boolean(result),
+    },
+    {
+      title: "Optimize",
+      desc: "Apply suggestions and export optimized DOCX or PDF.",
+      complete: Boolean(result) && (hasDownloaded || activeResultTab === "resume"),
+    },
+  ];
+
   return (
     <div className="app app-shell">
       <header className="hero-panel">
@@ -193,9 +214,13 @@ function App() {
         </aside>
 
         <section className="main-layout">
-        <section id="setup-section" className="setup-grid">
+        <section id="setup-section" className={`setup-grid ${staticOnlyMode ? "no-side" : ""}`}>
           <div className="setup-main">
-            <UploadSection onSubmit={handleAnalyze} loading={loading} />
+            <UploadSection
+              onSubmit={handleAnalyze}
+              loading={loading}
+              onProgressChange={(progress) => setFormProgress(progress)}
+            />
           </div>
           {!staticOnlyMode && (
             <div className="setup-side">
@@ -203,6 +228,21 @@ function App() {
               <HistoryPanel token={token} />
             </div>
           )}
+          <section className="card setup-guide">
+            <p className="coach-kicker">Quick Start</p>
+            <h2 className="panel-title">Drop resume, paste JD, run analysis</h2>
+            <div className="guide-list">
+              {quickSteps.map((step, index) => (
+                <div key={step.title} className={`guide-step ${step.complete ? "complete" : "pending"}`}>
+                  <div className="guide-step-index">{index + 1}</div>
+                  <div>
+                    <strong>{step.title}</strong>
+                    <span>{step.desc}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
         </section>
 
         {result && (
@@ -223,7 +263,7 @@ function App() {
                   <span className="result-pill">
                     {(result.missing_keywords || []).length} missing keywords
                   </span>
-                  <DownloadButton optimizedResume={result.optimized_resume} />
+                  <DownloadButton optimizedResume={result.optimized_resume} onDownloaded={() => setHasDownloaded(true)} />
                 </div>
               </div>
             </div>
@@ -263,27 +303,6 @@ function App() {
                 controls={result.rewrite_controls}
               />
             )}
-          </section>
-        )}
-
-        {!result && !loading && (
-          <section className="card empty-state">
-            <p className="coach-kicker">Quick Start</p>
-            <h2 className="panel-title">Drop resume, paste JD, run analysis</h2>
-            <div className="empty-grid">
-              <div className="empty-item">
-                <strong>1. Upload</strong>
-                <span>Add PDF, DOCX, or TXT resume.</span>
-              </div>
-              <div className="empty-item">
-                <strong>2. Analyze</strong>
-                <span>Get ATS score, keyword gaps, and risk signals.</span>
-              </div>
-              <div className="empty-item">
-                <strong>3. Optimize</strong>
-                <span>Apply suggestions and export optimized DOCX or PDF.</span>
-              </div>
-            </div>
           </section>
         )}
         </section>

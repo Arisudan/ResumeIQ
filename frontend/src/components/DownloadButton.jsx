@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { generateDocxBlobFromText, generatePdfBlobFromText } from "../localEngine";
 
-function DownloadButton({ optimizedResume }) {
+function DownloadButton({ optimizedResume, onDownloaded }) {
   const [loading, setLoading] = useState(false);
   const [format, setFormat] = useState("pdf");
 
@@ -29,6 +29,10 @@ function DownloadButton({ optimizedResume }) {
       } else {
         const blob = await generateDocxBlobFromText(optimizedResume);
         triggerFileDownload(blob, "optimized_resume.docx");
+      }
+
+      if (typeof onDownloaded === "function") {
+        onDownloaded();
       }
     } catch (error) {
       window.alert("Unable to download file right now. Please try again.");
