@@ -170,7 +170,7 @@ body {
   top: 50%;
   width: 0;
   height: 0;
-  animation: orbitAround 22s linear infinite;
+  animation: orbitAround 28s linear infinite;
 }
 
 .orbit-chip {
@@ -188,37 +188,38 @@ body {
   white-space: nowrap;
   box-shadow: 0 8px 18px rgba(39, 61, 92, 0.14);
   transform-origin: center center;
-  animation: counterOrbit 22s linear infinite;
+  animation: counterOrbit 28s linear infinite;
 }
 
 .orbit-item-one {
   --orbit-angle: 18deg;
-  --orbit-radius: 130px;
+  --orbit-radius: 144px;
 }
 
 .orbit-item-two {
   --orbit-angle: 138deg;
-  --orbit-radius: 130px;
+  --orbit-radius: 144px;
 }
 
 .orbit-item-three {
   --orbit-angle: 258deg;
-  --orbit-radius: 130px;
+  --orbit-radius: 144px;
 }
 
 .orb-core {
   position: absolute;
-  width: 152px;
-  height: 152px;
+  width: 140px;
+  height: 140px;
   border-radius: 999px;
-  background: radial-gradient(circle at 50% 45%, #ffffff 0%, #eef5ff 70%, #dbe8fb 100%);
-  border: 1px solid rgba(109, 143, 196, 0.45);
-  box-shadow: 0 14px 34px rgba(33, 60, 103, 0.3);
+  background: radial-gradient(circle at 50% 45%, rgba(255, 255, 255, 0.94) 0%, rgba(238, 245, 255, 0.82) 72%, rgba(219, 232, 251, 0.7) 100%);
+  border: 1px solid rgba(109, 143, 196, 0.3);
+  box-shadow: 0 10px 24px rgba(33, 60, 103, 0.18);
   transform-origin: center;
   will-change: transform, box-shadow;
   animation: orbGlide var(--motion-breathe-duration) cubic-bezier(0.4, 0.05, 0.2, 1) infinite;
   display: grid;
   place-items: center;
+  opacity: 0.88;
 }
 
 .orb-core::after {
@@ -231,11 +232,12 @@ body {
 }
 
 .center-core-logo {
-  width: 86px;
-  height: 86px;
+  width: 74px;
+  height: 74px;
   object-fit: contain;
-  filter: drop-shadow(0 6px 14px rgba(20, 47, 92, 0.24));
+  filter: drop-shadow(0 4px 10px rgba(20, 47, 92, 0.18));
   z-index: 2;
+  opacity: 0.92;
 }
 
 .main-layout {
@@ -1583,7 +1585,7 @@ textarea:focus {
   }
 
   .orbit-item {
-    animation-duration: 22s;
+    animation-duration: 28s;
   }
 
   .orbit-chip {
@@ -1593,8 +1595,8 @@ textarea:focus {
   }
 
   .center-core-logo {
-    width: 72px;
-    height: 72px;
+    width: 64px;
+    height: 64px;
   }
 
   .dashboard-shell {
