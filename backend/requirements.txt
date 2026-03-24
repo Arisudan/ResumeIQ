@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+python-multipart
+pdfplumber
+python-docx
+google-generativeai
+python-dotenv
+requests>=2.32.3
+chardet<6
