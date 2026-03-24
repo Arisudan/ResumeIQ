@@ -188,7 +188,10 @@ body {
 }
 
 .dashboard-nav-btn:disabled {
-  opacity: 0.5;
+  opacity: 1;
+  background: #e9eef7;
+  border-color: #d1dceb;
+  color: #6f7d92;
   cursor: not-allowed;
 }
 
@@ -385,8 +388,8 @@ body {
 .result-tab {
   border: 1px solid var(--border);
   border-radius: 8px;
-  background: #fffdf8;
-  color: #5d5347;
+  background: var(--surface2);
+  color: #4a5a70;
   font-size: 0.82rem;
   font-weight: 700;
   padding: 8px 10px;
@@ -574,7 +577,9 @@ textarea:focus {
 
 .btn-primary:disabled {
   cursor: not-allowed;
-  opacity: 0.75;
+  opacity: 1;
+  background: #8eaeea;
+  color: #ffffff;
 }
 
 .inline-error {
