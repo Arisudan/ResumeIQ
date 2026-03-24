@@ -58,20 +58,26 @@ npm run dev
 
 ## GitHub Pages Deployment (Frontend)
 
-GitHub Pages can host the frontend only. Backend must run on a real server (for example Render).
+This repo is configured to run in static-only mode on GitHub Pages by default.
 
-1. Keep backend live on a public URL (example `https://your-backend.onrender.com`).
-2. In your GitHub repo, open Settings -> Secrets and variables -> Actions -> Variables.
-3. Add variable `VITE_API_BASE_URL` with your backend URL.
-4. In repo Settings -> Pages, set Source to `GitHub Actions`.
-5. Push to `main`. Workflow `.github/workflows/deploy-pages.yml` will auto-deploy frontend.
-6. Frontend will be served at `https://<github-username>.github.io/ResumeIQ/`.
+In static-only mode:
 
-### Important Backend Env for Pages CORS
+1. Frontend runs fully on GitHub Pages.
+2. Resume parsing (PDF/DOCX/TXT), ATS scoring, optimization, and DOCX export run in the browser.
+3. Auth/history/cover-letter backend endpoints are disabled.
 
-Set this on backend host:
+If you later want full backend features, set a backend URL and redeploy.
 
-- `ALLOWED_ORIGINS=https://<github-username>.github.io`
+1. In repo Settings -> Pages, set Source to `GitHub Actions`.
+2. Push to `main`.
+3. Workflow `.github/workflows/deploy-pages.yml` auto-deploys static frontend.
+4. Site URL: `https://<github-username>.github.io/ResumeIQ/`.
+
+### Optional: Enable Backend Mode Later
+
+If you want backend endpoints (auth/history/cover-letter), set this variable and redeploy frontend:
+
+- `VITE_API_BASE_URL=https://your-backend-service.example.com`
 
 ## Tech Stack
 

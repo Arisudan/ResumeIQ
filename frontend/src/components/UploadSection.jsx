@@ -21,11 +21,14 @@ function UploadSection({ onSubmit, loading }) {
       return;
     }
 
-    const validTypes = ["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
-    const validExtension = file.name.toLowerCase().endsWith(".pdf") || file.name.toLowerCase().endsWith(".docx");
+    const validTypes = ["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "text/plain"];
+    const validExtension =
+      file.name.toLowerCase().endsWith(".pdf") ||
+      file.name.toLowerCase().endsWith(".docx") ||
+      file.name.toLowerCase().endsWith(".txt");
 
     if (!validTypes.includes(file.type) && !validExtension) {
-      setError("Please upload a valid PDF or DOCX file.");
+      setError("Please upload a valid PDF, DOCX, or TXT file.");
       return;
     }
 
@@ -78,14 +81,14 @@ function UploadSection({ onSubmit, loading }) {
         onDrop={handleDrop}
       >
         <strong>Drop your resume here or click to upload</strong>
-        <div className="upload-label">Accepted formats: .pdf, .docx</div>
+        <div className="upload-label">Accepted formats: .pdf, .docx, .txt</div>
         {resumeFile && <div className="file-name">{resumeFile.name}</div>}
       </div>
 
       <input
         ref={fileInputRef}
         type="file"
-        accept=".pdf,.docx"
+        accept=".pdf,.docx,.txt"
         hidden
         onChange={(event) => handleFile(event.target.files?.[0])}
       />

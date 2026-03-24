@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./App.css";
 import { apiUrl, authHeaders } from "./api";
+import { runStaticAnalysis } from "./localEngine";
 import AnalysisReport from "./components/AnalysisReport";
 import AuthPanel from "./components/AuthPanel";
 import CoverLetterPanel from "./components/CoverLetterPanel";
@@ -12,6 +13,7 @@ import ScoreCard from "./components/ScoreCard";
 import UploadSection from "./components/UploadSection";
 
 function App() {
+  const staticOnlyMode = !import.meta.env.VITE_API_BASE_URL;
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -40,6 +42,28 @@ function App() {
     setError("");
 
     try {
+      if (staticOnlyMode) {
+        const resumeFile = formData.get("resume_file");
+        const jobDescription = formData.get("job_description") || "";
+        const controls = {
+          role_template: formData.get("role_template") || "software",
+          tone: formData.get("tone") || "professional",
+          length_mode: formData.get("length_mode") || "balanced",
+          target_seniority: formData.get("target_seniority") || "auto",
+          strictness: formData.get("strictness") || "strict",
+          region_style: formData.get("region_style") || "US",
+          language: formData.get("language") || "English",
+        };
+
+        const localResult = await runStaticAnalysis({
+          file: resumeFile,
+          jobDescription,
+          controls,
+        });
+        setResult(localResult);
+        return;
+      }
+
       const response = await fetch(apiUrl("/analyze"), {
         method: "POST",
         headers: authHeaders(token),
@@ -78,9 +102,9 @@ function App() {
 
       <main className="main-grid">
         <div>
-          <AuthPanel token={token} user={user} onAuth={handleAuth} onLogout={handleLogout} />
+          {!staticOnlyMode && <AuthPanel token={token} user={user} onAuth={handleAuth} onLogout={handleLogout} />}
           <UploadSection onSubmit={handleAnalyze} loading={loading} />
-          <HistoryPanel token={token} />
+          {!staticOnlyMode && <HistoryPanel token={token} />}
         </div>
 
         <div>
@@ -103,12 +127,14 @@ function App() {
                 changeReasons={result.change_reasons}
                 truthfulnessNotes={result.truthfulness_notes}
               />
-              <CoverLetterPanel
-                resumeText={result.optimized_resume}
-                jobDescription={result.job_description_used || ""}
-                controls={result.rewrite_controls}
-              />
-              <DownloadButton optimizedResume={result.optimized_resume} />
+              {!staticOnlyMode && (
+                <CoverLetterPanel
+                  resumeText={result.optimized_resume}
+                  jobDescription={result.job_description_used || ""}
+                  controls={result.rewrite_controls}
+                />
+              )}
+              <DownloadButton optimizedResume={result.optimized_resume} staticOnlyMode={staticOnlyMode} />
             </>
           )}
         </div>

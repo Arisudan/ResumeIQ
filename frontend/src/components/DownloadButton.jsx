@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { apiUrl } from "../api";
+import { generateDocxBlobFromText } from "../localEngine";
 
-function DownloadButton({ optimizedResume }) {
+function DownloadButton({ optimizedResume, staticOnlyMode = false }) {
   const [loading, setLoading] = useState(false);
 
   const handleDownload = async () => {
@@ -11,6 +12,19 @@ function DownloadButton({ optimizedResume }) {
 
     setLoading(true);
     try {
+      if (staticOnlyMode) {
+        const blob = await generateDocxBlobFromText(optimizedResume);
+        const url = window.URL.createObjectURL(blob);
+        const anchor = document.createElement("a");
+        anchor.href = url;
+        anchor.download = "optimized_resume.docx";
+        document.body.appendChild(anchor);
+        anchor.click();
+        anchor.remove();
+        window.URL.revokeObjectURL(url);
+        return;
+      }
+
       const response = await fetch(apiUrl("/download"), {
         method: "POST",
         headers: {
