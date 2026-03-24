@@ -168,9 +168,12 @@ body {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 0;
-  height: 0;
-  animation: orbitAround 28s linear infinite;
+  width: fit-content;
+  height: fit-content;
+  offset-anchor: center;
+  offset-path: circle(144px at center);
+  offset-rotate: 0deg;
+  animation: orbitPath 28s linear infinite;
 }
 
 .orbit-chip {
@@ -188,22 +191,19 @@ body {
   white-space: nowrap;
   box-shadow: 0 8px 18px rgba(39, 61, 92, 0.14);
   transform-origin: center center;
-  animation: counterOrbit 28s linear infinite;
+  animation: none;
 }
 
 .orbit-item-one {
-  --orbit-angle: 18deg;
-  --orbit-radius: 144px;
+  animation-delay: 0s;
 }
 
 .orbit-item-two {
-  --orbit-angle: 138deg;
-  --orbit-radius: 144px;
+  animation-delay: -9.333s;
 }
 
 .orbit-item-three {
-  --orbit-angle: 258deg;
-  --orbit-radius: 144px;
+  animation-delay: -18.666s;
 }
 
 .orb-core {
@@ -1470,21 +1470,12 @@ textarea:focus {
   }
 }
 
-@keyframes counterOrbit {
+@keyframes orbitPath {
   from {
-    transform: rotate(0deg);
+    offset-distance: 0%;
   }
   to {
-    transform: rotate(-360deg);
-  }
-}
-
-@keyframes orbitAround {
-  from {
-    transform: rotate(var(--orbit-angle)) translateX(var(--orbit-radius)) rotate(calc(-1 * var(--orbit-angle)));
-  }
-  to {
-    transform: rotate(calc(var(--orbit-angle) + 360deg)) translateX(var(--orbit-radius)) rotate(calc(-1 * (var(--orbit-angle) + 360deg)));
+    offset-distance: 100%;
   }
 }
 
@@ -1586,6 +1577,7 @@ textarea:focus {
 
   .orbit-item {
     animation-duration: 28s;
+    offset-path: circle(124px at center);
   }
 
   .orbit-chip {
